@@ -1,25 +1,33 @@
-export const loginUser = (email, password) => async (dispatch) => {
-    dispatch({ type: "LOGIN_REQUEST" });
-    try {
-      const response = await fetch("https://localhost:5001/api/Logins/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-  
-      const data = await response.json();
-      
-      if (!response.ok) throw new Error(data.message || "Login failed");
-  
-      // Lưu JWT vào localStorage
-      localStorage.setItem("token", data.token);
-  
-      // Lưu thông tin người dùng vào Redux store
-      dispatch({ type: "LOGIN_SUCCESS", payload: data.token });
-    } catch (error) {
-      dispatch({ type: "LOGIN_FAILURE", payload: error.message }); // Lưu lỗi vào Redux
+import { Toast } from "antd-mobile";
+import { loginSuccess, loginFailure } from "../../redux/actions/LoginActions";
+
+export const handleLogin = async (credentials, dispatch, navigate) => {
+  try {
+    const response = await fetch("https://localhost:5001/api/Logins/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Sai tài khoản hoặc mật khẩu!");
     }
-  };
-  
+
+    dispatch(loginSuccess(data)); // Đăng nhập thành công
+
+    // 👉 Chỉ chuyển trang nếu đăng nhập thành công
+    navigate("/dashboard");
+  } catch (error) {
+    dispatch(loginFailure(error.message));
+
+    // Hiển thị thông báo lỗi
+    Toast.show({
+      content: error.message,
+      duration: 2000,
+    });
+  }
+};

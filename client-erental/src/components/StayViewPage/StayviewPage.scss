@@ -1,0 +1,127 @@
+.stay-view {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #f8f8f8;
+  
+    .filter-section {
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+    }
+  
+    .filter-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f2f2f2;
+      border: none;
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+  
+    .date-header {
+      background: #fff;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      font-weight: bold;
+      border-bottom: 1px solid #ddd;
+  
+      .date-columns {
+        display: flex;
+        gap: 12px;
+  
+        span {
+          width: 60px;
+          text-align: center;
+          background: #eef3ff;
+          padding: 4px 8px;
+          border-radius: 4px;
+          color: #007bff;
+        }
+      }
+    }
+  
+    .stay-table {
+      flex-grow: 1;
+      overflow-y: auto;
+      background: #fff;
+      padding: 8px;
+  
+      .table-header {
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+        padding: 10px;
+        border-bottom: 2px solid #ddd;
+      }
+  
+      .table-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+      }
+  
+      .room {
+        flex: 1;
+        font-size: 14px;
+        color: #333;
+      }
+  
+      .guest {
+        flex: 2;
+        font-size: 14px;
+        padding: 4px 8px;
+        border-radius: 4px;
+        border: 2px solid transparent;
+        text-align: center;
+      }
+  
+      .blue {
+        color: blue;
+        border-color: blue;
+      }
+  
+      .green {
+        color: green;
+        border-color: green;
+      }
+    }
+  
+    .summary {
+      background: #fff;
+      padding: 12px 16px;
+      border-top: 1px solid #ddd;
+  
+      .row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        font-weight: bold;
+        padding: 10px 0;
+        color: #007bff;
+      }
+  
+      span {
+        flex: 1;
+        text-align: center;
+      }
+    }
+  
+    .tabbar-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #fff;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    }
+  }
+  

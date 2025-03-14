@@ -1,82 +1,47 @@
-import React, { useEffect, useState } from "react";
-import { Form, Input, Button, Card, notification  } from "antd";
-import { MailOutlined, LockOutlined } from "@ant-design/icons";
+import React from "react";
+import { Form, Input, Button } from "antd-mobile";
+import { MailOutline, LockOutline } from "antd-mobile-icons";
 import { useNavigate } from "react-router-dom";
-import "./LoginPage.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../redux/actions/LoginActions";
+import { handleLogin } from "../LoginPage/LoginPageHandlers";
+import "./LoginPage.scss";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const dispatch = useDispatch()
-  const { user, error } = useSelector((state) => state.login);
+  const { loading, error } = useSelector((state) => state.login);
+
   const onFinish = (values) => {
-    dispatch(login(values.email, values.password));
+    handleLogin(values, dispatch, navigate);
   };
 
-  useEffect(() => {
-    if (user) {
-      navigate("/dashboard");  
-    }
-  }, [user, navigate]);
-
-
-  useEffect(() => {
-    if (error) {
-      notification.error({
-        message: "Login Error",
-        description: error,
-      });
-    }
-  }, [error]);
-
   return (
-    <div className={"login-container"}>
+    <div className="login-container">
       <div className="login-title">
         <h2 className="title">Welcome Back!</h2>
-        <p className={"subtitle"}>Let's login to eRental App!</p>
+        <p className="subtitle">Let's login to eRental App!</p>
       </div>
-      <Card className={"login-card"}>
-        <Form layout="vertical" onFinish={onFinish}> 
-          <Form.Item
-            label="Email Address"
-            name="email"
-            rules={[{ required: true, message: "Enter email address!" }]}
-          >
-            <Input
-              className={"input-field"}
-              prefix={<MailOutlined />}
-              placeholder="Enter email address"
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[{ required: true, message: "Enter password!" }]}
-          >
-            <Input.Password
-              className={"input-field"}
-              prefix={<LockOutlined />}
-              placeholder="Enter account password"
-            />
-          </Form.Item>
-
-          <div className={"forgot-password"}>Forgot Password?</div>
-
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              block
-              className={"login-btn"}
-            >
+      <div className="login-card">
+        <Form
+          layout="vertical"
+          onFinish={onFinish}
+          footer={
+            <Button block type="submit" color="primary" className="login-btn" loading={loading}>
               Login
             </Button>
+          }
+        >
+          <Form.Item label="Email Address" name="email" rules={[{ required: true, message: "Enter email address!" }]}> 
+            <Input placeholder="Enter email address" prefix={<MailOutline />} />
+          </Form.Item>
+          <Form.Item label="Password" name="password" rules={[{ required: true, message: "Enter password!" }]}> 
+            <Input placeholder="Enter account password" type="password" prefix={<LockOutline />} />
           </Form.Item>
         </Form>
-        <div className={"register-link"}>Register Instead</div>
-      </Card>
+        {error && <p className="error-message">{error}</p>}
+        <div className="forgot-password">Forgot Password?</div>
+        <div className="register-link">Register Instead</div>
+      </div>
     </div>
   );
 };
