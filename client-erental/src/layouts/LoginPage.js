@@ -3,8 +3,9 @@ import { Form, Input, Button } from "antd-mobile";
 import { MailOutline, LockOutline } from "antd-mobile-icons";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { handleLogin } from "../LoginPage/LoginPageHandlers";
-import "./LoginPage.scss";
+
+import "../styles/LoginPage.scss";
+import { handleLogin } from "../components/LoginPageHandlers";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -26,21 +27,41 @@ const Login = () => {
           layout="vertical"
           onFinish={onFinish}
           footer={
-            <Button block type="submit" color="primary" className="login-btn" loading={loading}>
+            <Button
+              block
+              type="submit"
+              color="primary"
+              className="login-btn"
+              loading={loading}
+            >
               Login
             </Button>
           }
         >
-          <Form.Item label="Email Address" name="email" rules={[{ required: true, message: "Enter email address!" }]}> 
+          <Form.Item
+            label="Email Address"
+            name="email"
+            rules={[{ required: true, message: "Enter email address!" }]}
+          >
             <Input placeholder="Enter email address" prefix={<MailOutline />} />
           </Form.Item>
-          <Form.Item label="Password" name="password" rules={[{ required: true, message: "Enter password!" }]}> 
-            <Input placeholder="Enter account password" type="password" prefix={<LockOutline />} />
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[{ required: true, message: "Enter password!" }]}
+          >
+            <Input
+              placeholder="Enter account password"
+              type="password"
+              prefix={<LockOutline />}
+            />
           </Form.Item>
         </Form>
         {error && <p className="error-message">{error}</p>}
         <div className="forgot-password">Forgot Password?</div>
-        <div className="register-link">Register Instead</div>
+        <div className="register-link" onClick={() => navigate("/register")}>
+          Register Instead
+        </div>
       </div>
     </div>
   );

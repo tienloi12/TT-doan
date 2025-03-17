@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -82,6 +82,30 @@ namespace server_eRental.Controllers
 
             return CreatedAtAction("GetUser", new { id = user.UserId }, user);
         }
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] User model)
+        {
+            if (await _context.Users.AnyAsync(u => u.Email == model.Email))
+                {
+                    return BadRequest(new { message = "Email already exists" });
+                }
+
+                var user = new User
+                {
+                Username = model.Username,
+                Email = model.Email,
+                Phone = model.Phone,
+                PasswordHash = model.PasswordHash, // Nếu không băm mật khẩu
+                Role = "Customer",
+                CreatedAt = DateTime.UtcNow
+                };
+
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "Registration successful", user });
+            }
+
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]

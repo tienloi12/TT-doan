@@ -8,7 +8,7 @@ import {
   FilterOutline,
   MoreOutline,
 } from "antd-mobile-icons";
-import "./Tarbar.scss";
+import "../styles/Tarbar.scss";
 
 const TabBarComponent = () => {
   const navigate = useNavigate();

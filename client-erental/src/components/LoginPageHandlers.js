@@ -1,5 +1,5 @@
 import { Toast } from "antd-mobile";
-import { loginSuccess, loginFailure } from "../../redux/actions/LoginActions";
+import { loginSuccess, loginFailure } from "../redux/actions/LoginActions";
 
 export const handleLogin = async (credentials, dispatch, navigate) => {
   try {

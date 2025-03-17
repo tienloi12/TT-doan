@@ -2,8 +2,9 @@ import React from "react";
 import { NavBar, Button } from "antd-mobile";
 import { LeftOutline, MoreOutline, FilterOutline } from "antd-mobile-icons";
 import { useNavigate } from "react-router-dom";
-import "./StayviewPage.scss";
-import TabBarComponent from "../Tarbar/Tarbar";
+import "../styles/StayviewPage.scss";
+import TabBarComponent from "./Tarbar";
+
 
 const StayView = () => {
   const navigate = useNavigate();

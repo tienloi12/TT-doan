@@ -1,8 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "../src/components/LoginPage/LoginPage";
-import Dashboard from "./components/DashboardPage/DashboardPage";
-import StayView from "./components/StayViewPage/StayviewPage";
+import Login from "./layouts/LoginPage";
+import Dashboard from "./layouts/DashboardPage";
+import StayView from "./layouts/StayviewPage";
+import Register from "./layouts/RegisterPage";
+
 
 
 function App() {
@@ -12,6 +14,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/stay" element={<StayView />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
   );
