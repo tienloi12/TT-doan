@@ -1,0 +1,133 @@
+.information-page {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #f9f9f9;
+  
+    .user-info {
+      padding: 16px;
+      background: white;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+  
+      h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: bold;
+      }
+  
+      p {
+        margin: 4px 0 0;
+        color: #666;
+        font-size: 14px;
+  
+        .user-id {
+          color: #1677ff;
+          font-weight: bold;
+        }
+      }
+    }
+  
+    .info-tabs {
+      flex-grow: 1;
+      overflow-y: auto;
+    }
+  
+    .info-card {
+      margin: 10px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  
+      .booking-details {
+        .date-info {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background: #eef3ff;
+          padding: 12px;
+          border-radius: 8px;
+  
+          .label {
+            font-size: 12px;
+            color: #666;
+          }
+  
+          .date {
+            font-size: 14px;
+            font-weight: bold;
+          }
+  
+          .arrow {
+            font-size: 20px;
+            font-weight: bold;
+            color: #666;
+          }
+  
+          .nights {
+            background: #ff4d4f;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 14px;
+          }
+        }
+  
+        .rental-info {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 12px 0;
+          color: #666;
+          font-size: 14px;
+  
+          .home-icon {
+            font-size: 20px;
+            color: #1677ff;
+          }
+        }
+  
+        .rate-info,
+        .summary {
+          padding: 12px 0;
+  
+          h4 {
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #333;
+          }
+  
+          p {
+            margin: 4px 0;
+            font-size: 14px;
+            color: #666;
+          }
+        }
+      }
+    }
+  
+    .bottom-buttons {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      background: white;
+      border-top: 1px solid #eee;
+  
+      .primary-btn {
+        flex: 1;
+        margin-left: 8px;
+        background: #1677ff;
+        color: white;
+        font-weight: bold;
+      }
+  
+      .secondary-btn {
+        flex: 1;
+        margin-right: 8px;
+        background: #f0f0f0;
+        color: #333;
+        font-weight: bold;
+      }
+    }
+  }
+  

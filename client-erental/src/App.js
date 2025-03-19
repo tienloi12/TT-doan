@@ -4,6 +4,10 @@ import Login from "./layouts/LoginPage";
 import Dashboard from "./layouts/DashboardPage";
 import StayView from "./layouts/StayviewPage";
 import Register from "./layouts/RegisterPage";
+import RentalAvailability from "./layouts/AvailabilityPage";
+import InUsePage from "./layouts/InUsePage";
+import InformationPage from "./layouts/InformationPage";
+import NotificationPage from "./layouts/NotificationPage";
 
 
 
@@ -15,6 +19,10 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/stay" element={<StayView />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/availability" element={<RentalAvailability />} />
+        <Route path="/inuse" element={<InUsePage />} />
+        <Route path="/information" element={<InformationPage />} />
+        <Route path="/notification" element={<NotificationPage />} />
       </Routes>
     </Router>
   );

@@ -1,29 +1,46 @@
 import React from "react";
-import { NavBar, Button } from "antd-mobile";
-import { LeftOutline, MoreOutline, FilterOutline } from "antd-mobile-icons";
+import { NavBar, Button, List, Divider } from "antd-mobile";
+import { MoreOutline, FilterOutline } from "antd-mobile-icons";
 import { useNavigate } from "react-router-dom";
 import "../styles/StayviewPage.scss";
 import TabBarComponent from "./Tarbar";
-
 
 const StayView = () => {
   const navigate = useNavigate();
 
   const data = [
-    { room: "B.101 - Family", guest: "Mr. Thanh", color: "blue" },
-    { room: "B.102 - Couple", guest: "Ms Hoang Huong Pham", color: "green" },
-    { room: "B.201 - Single", guest: "", color: "" },
-    { room: "B.202 - Family", guest: "Ms Le Thi Thuy", color: "green" },
-    { room: "B.301 - Couple", guest: "", color: "" },
-    { room: "B.302 - Single", guest: "", color: "" },
-    { room: "B.401 - Family", guest: "", color: "" },
-    { room: "B.402 - Couple", guest: "", color: "" },
+    {
+      room: "B.101 - Family",
+      guest: "Mr. Thanh",
+      color: "blue",
+      rental: 56,
+      occupancy: 20,
+    },
+    {
+      room: "B.102 - Couple",
+      guest: "Ms Hoang Huong Pham",
+      color: "green",
+      rental: 12,
+      occupancy: 42,
+    },
+    { room: "B.201 - Single", guest: "", color: "", rental: 20, occupancy: 36 },
+    {
+      room: "B.202 - Family",
+      guest: "Ms Le Thi Thuy",
+      color: "green",
+      rental: 14,
+      occupancy: 30,
+    },
+    { room: "B.301 - Couple", guest: "", color: "", rental: 18, occupancy: 25 },
+    { room: "B.302 - Single", guest: "", color: "", rental: 22, occupancy: 28 },
+    { room: "B.401 - Family", guest: "", color: "", rental: 19, occupancy: 32 },
+    { room: "B.402 - Couple", guest: "", color: "", rental: 24, occupancy: 35 },
   ];
 
   return (
     <div className="stay-view">
       <NavBar
-        onBack={() => navigate(-1)}
+        onBack={() => navigate("/dashboard")}
         right={<MoreOutline fontSize={24} />}
       >
         Stay view
@@ -34,42 +51,58 @@ const StayView = () => {
           <FilterOutline /> 25/12/2024
         </Button>
         <div className="date-columns">
-          <span>Wed 26</span>
-          <span>Wed 27</span>
-          <span>Wed 28</span>
+          <div className="date">Wed 26</div>
+          <div className="date">Wed 27</div>
+          <div className="date">Wed 28</div>
         </div>
       </div>
 
       <div className="stay-table">
-        <div className="table-header">
-          <div className="date-header">
-          <FilterOutline /><span>Đồ văn phòng</span>
-          </div>
-          <span className="guest">Guest</span>
+        <div>
+          <List renderHeader={() => "Đồ văn phòng"}>
+            <List.Item className="custom-list-item">
+              <div className="custom-flex">
+                <div className="title">
+                  <FilterOutline />
+                  <span>Đồ văn phòng</span>
+                </div>
+                <div>0</div>
+                <div>0</div>
+                <div>0</div>
+              </div>
+            </List.Item>
+            {data.map((item, index) => (
+              <List.Item key={index} className="custom-list-item">
+                <div className="custom-flex">
+                  <div>{item.room}</div>
+                  <div>{item.guest}</div>
+                  <div></div>
+                  <div></div>
+                </div>
+              </List.Item>
+            ))}
+            <List.Item className="custom-list-item">
+              <div className="custom-flex">
+                <div className="title" onClick={() => navigate("/availability")}>
+                  Rental Availability (#)
+                </div>
+                <div>56</div>
+                <div>56</div>
+                <div>56</div>
+              </div>
+            </List.Item>
+            <List.Item className="custom-list-item">
+              <div className="custom-flex">
+                <div className="title">Occupancy (%)</div>
+                <div>20</div>
+                <div>56</div>
+                <div>56</div>
+              </div>
+            </List.Item>
+          </List>
         </div>
-        {data.map((item, index) => (
-          <div key={index} className="table-row">
-            <span className="room">{item.room}</span>
-            <span className={`guest ${item.color}`}>{item.guest}</span>
-          </div>
-        ))}
       </div>
-
-      <div className="summary">
-        <div className="row">
-          <span>Rental Availability (#)</span>
-          <span>56</span>
-          <span>12</span>
-          <span>20</span>
-        </div>
-        <div className="row">
-          <span>Occupancy (%)</span>
-          <span>20</span>
-          <span>42</span>
-          <span>36</span>
-        </div>
-      </div>
-
+      <Divider />
       <TabBarComponent />
     </div>
   );

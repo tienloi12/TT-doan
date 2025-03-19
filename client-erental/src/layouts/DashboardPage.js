@@ -1,5 +1,5 @@
 import React from "react";
-import { NavBar, Button } from "antd-mobile";
+import { NavBar, Button, Divider } from "antd-mobile";
 import { useNavigate } from "react-router-dom";
 import {
   LineChart,
@@ -18,8 +18,6 @@ import TabBarComponent from "./Tarbar";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const back = () => navigate(-1);
-  const right = <MoreOutline fontSize={24} />;
   // Dữ liệu biểu đồ đường (Doanh thu)
   const revenueData = [
     { month: "Jan", value: 12000 },
@@ -30,10 +28,10 @@ const Dashboard = () => {
     { month: "Jun", value: 21000 },
     { month: "Jul", value: 25000 },
     { month: "Aug", value: 23000 },
-    { month: "Sep", value: 26000 },
-    { month: "Oct", value: 28000 },
-    { month: "Nov", value: 30000 },
-    { month: "Dec", value: 32000 },
+    // { month: "Sep", value: 26000 },
+    // { month: "Oct", value: 28000 },
+    // { month: "Nov", value: 30000 },
+    // { month: "Dec", value: 32000 },
   ];
 
   // Dữ liệu biểu đồ tròn (Trạng thái thuê)
@@ -45,11 +43,20 @@ const Dashboard = () => {
     { name: "Đồ đang sửa", value: 203, color: "#13c2c2" },
     { name: "Đồ ưu tiên", value: 158, color: "#722ed1" },
   ];
-
+  const CustomLegend = ({ payload }) => (
+    <div className="custom-legend">
+      {payload.map((entry, index) => (
+        <div key={`legend-${index}`} className="legend-item">
+          <div className="legend-color" style={{ backgroundColor: entry.color }}></div>
+          <span>{entry.value} - {entry.name}</span>
+        </div>
+      ))}
+    </div>
+  );
   return (
     <div className="dashboard-container">
       {/* Thanh điều hướng */}
-      <NavBar onBack={() => navigate(-1)} right={<MoreOutline fontSize={24} />}>
+      <NavBar onBack={() => navigate("/")} right={<MoreOutline fontSize={24} />}>
         Dashboard
       </NavBar>
 
@@ -79,10 +86,10 @@ const Dashboard = () => {
           <div className="info-box">
             <span>End</span> 20/50
           </div>
-          <div className="info-box">
+          <div className="info-box" onClick={() => navigate("/availability")}>
             <span>Reservation</span> 175
           </div>
-          <div className="info-box">
+          <div className="info-box" onClick={() => navigate("/inuse")}>
             <span>In-Use</span> 250
           </div>
         </div>
@@ -112,6 +119,7 @@ const Dashboard = () => {
               />
             </LineChart>
           </ResponsiveContainer>
+          
         </div>
       </div>
 
@@ -137,7 +145,9 @@ const Dashboard = () => {
               <Tooltip />
             </PieChart>
           </ResponsiveContainer>
+          <CustomLegend payload={rentalStatus} />
         </div>
+        <Divider />
       </div>
       <TabBarComponent />
     </div>

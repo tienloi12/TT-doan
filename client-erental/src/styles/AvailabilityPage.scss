@@ -1,0 +1,29 @@
+.filter-section {
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;      
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+ 
+    .date-columns {
+      display: flex;
+      gap: 12px;
+      .date {
+        width: 60px;
+        text-align: center;
+        background: #eef3ff;
+        padding: 4px 8px;
+        border-radius: 4px;
+        color: #007bff;
+      }
+    }
+  }
+  .filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f2f2f2;
+    border: none;
+    padding: 6px 12px;
+    font-size: 14px;
+  }

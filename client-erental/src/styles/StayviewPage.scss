@@ -7,9 +7,21 @@
     .filter-section {
       padding: 8px 16px;
       display: flex;
-      align-items: center;
+      align-items: center;      
       background: #fff;
       border-bottom: 1px solid #ddd;
+      .date-columns {
+        display: flex;
+        gap: 12px;
+        .date {
+          width: 60px;
+          text-align: center;
+          background: #eef3ff;
+          padding: 4px 8px;
+          border-radius: 4px;
+          color: #007bff;
+        }
+      }
     }
   
     .filter-btn {
@@ -22,29 +34,10 @@
       font-size: 14px;
     }
   
-    .date-header {
+    .title{
       background: #fff;
-      padding: 12px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 14px;
-      font-weight: bold;
-      border-bottom: 1px solid #ddd;
-  
-      .date-columns {
-        display: flex;
-        gap: 12px;
-  
-        span {
-          width: 60px;
-          text-align: center;
-          background: #eef3ff;
-          padding: 4px 8px;
-          border-radius: 4px;
-          color: #007bff;
-        }
-      }
+      font-size: 12px;
+      font-weight: 600;
     }
   
     .stay-table {
@@ -53,46 +46,32 @@
       background: #fff;
       padding: 8px;
   
-      .table-header {
-        display: flex;
-        justify-content: space-between;
-        font-weight: bold;
-        padding: 10px;
-        border-bottom: 2px solid #ddd;
+      // .table-header {
+      //   display: flex;
+      //   justify-content: space-between;
+      //   font-weight: bold;
+      //   padding: 10px;
+      //   border-bottom: 2px solid #ddd;
+      // }
+      .custom-list-item {
+        border: 1px solid #ddd;
+        padding: 8px 12px;
       }
-  
-      .table-row {
+      
+      .custom-flex {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-        border-bottom: 1px solid #ddd;
+        width: 100%;
       }
-  
-      .room {
+      
+      .custom-flex div {
         flex: 1;
-        font-size: 14px;
-        color: #333;
+        border-right: 1px solid #ddd;
       }
-  
-      .guest {
-        flex: 2;
-        font-size: 14px;
-        padding: 4px 8px;
-        border-radius: 4px;
-        border: 2px solid transparent;
-        text-align: center;
+      
+      .custom-flex div:last-child {
+        border-right: none;
       }
-  
-      .blue {
-        color: blue;
-        border-color: blue;
-      }
-  
-      .green {
-        color: green;
-        border-color: green;
-      }
+      
     }
   
     .summary {
