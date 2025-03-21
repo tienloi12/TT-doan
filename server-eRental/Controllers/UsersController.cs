@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using server_eRental.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace server_eRental.Controllers
 {
@@ -105,6 +106,64 @@ namespace server_eRental.Controllers
 
                 return Ok(new { message = "Registration successful", user });
             }
+
+
+
+
+
+      [HttpPost("check-email")]
+public async Task<IActionResult> CheckEmail([FromBody] ForgotPasswordRequest request)
+{
+
+            Console.WriteLine($"Received email: {request.Email}");
+    var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+    if (user == null)
+    {
+        return NotFound(new { message = "Email not found" });
+    }
+
+    return Ok(new { message = "Email verified" });
+}
+
+        [HttpPost("forgot-password")]
+public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+{
+    var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+    if (user == null)
+    {
+        return NotFound(new { message = "Email not found" });
+    }
+
+    // Tạo token reset mật khẩu
+    user.ResetToken = Guid.NewGuid().ToString();
+    user.ResetTokenExpiry = DateTime.UtcNow.AddHours(1); // Hết hạn sau 1 giờ
+
+    await _context.SaveChangesAsync();
+
+    // ⚠️ Thay vì gửi email, trả token về frontend để test
+    return Ok(new { message = "Reset token generated", token = user.ResetToken });
+}
+
+      [HttpPost("reset-password")]
+public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+{
+    Console.WriteLine($"Received Token: {request.Token}"); // Debug token
+
+    var user = await _context.Users.FirstOrDefaultAsync(u => u.ResetToken == request.Token);
+    if (user == null || user.ResetTokenExpiry < DateTime.UtcNow)
+    {
+        return BadRequest(new { message = "Invalid or expired reset token" });
+    }
+
+    // Cập nhật mật khẩu mới
+    user.PasswordHash = request.NewPassword; // Nếu không băm mật khẩu
+    user.ResetToken = null;
+    user.ResetTokenExpiry = null;
+
+    await _context.SaveChangesAsync();
+
+    return Ok(new { message = "Password reset successful" });
+}
 
 
         // DELETE: api/Users/5

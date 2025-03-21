@@ -58,7 +58,12 @@ const Login = () => {
           </Form.Item>
         </Form>
         {error && <p className="error-message">{error}</p>}
-        <div className="forgot-password">Forgot Password?</div>
+        <div
+          className="forgot-password"
+          onClick={() => navigate("/forgot-password")}
+        >
+          Forgot Password?
+        </div>
         <div className="register-link" onClick={() => navigate("/register")}>
           Register Instead
         </div>

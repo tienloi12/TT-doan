@@ -8,6 +8,7 @@ import RentalAvailability from "./layouts/AvailabilityPage";
 import InUsePage from "./layouts/InUsePage";
 import InformationPage from "./layouts/InformationPage";
 import NotificationPage from "./layouts/NotificationPage";
+import ForgotPasswordPage from "./layouts/ForgotPasswordPage";
 
 
 
@@ -23,6 +24,7 @@ function App() {
         <Route path="/inuse" element={<InUsePage />} />
         <Route path="/information" element={<InformationPage />} />
         <Route path="/notification" element={<NotificationPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       </Routes>
     </Router>
   );
