@@ -12,12 +12,14 @@ import {
   CloseOutline,
 } from "antd-mobile-icons";
 import "../styles/Tarbar.scss";
+import { useSelector } from "react-redux";
 
 const TabBarComponent = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [menuVisible, setMenuVisible] = useState(false);
-
+  const user = useSelector((state) => state.login.user);
+  console.log("User từ Redux Store:", user);
   const tabs = [
     { key: "/dashboard", title: "Home", icon: <AppOutline /> },
     { key: "/stay", title: "Stay view", icon: <PieOutline /> },
@@ -28,7 +30,7 @@ const TabBarComponent = () => {
       icon: (
         <div className="tab-icon">
           <BellOutline />
-          <span className="badge">4</span> {/* Hiển thị số thông báo */}
+          <span className="badge">4</span>
         </div>
       ),
     },
@@ -48,19 +50,23 @@ const TabBarComponent = () => {
           ))}
         </TabBar>
       </div>
-
-      {/* Popup Menu bên phải */}
       <Popup
         visible={menuVisible}
         onMaskClick={() => setMenuVisible(false)}
         position="right"
-        bodyStyle={{ width: "250px", height: "100vh", padding: "10px" }}
+        className="custom-popup"
       >
         <Button onClick={() => setMenuVisible(false)} style={{ float: "right" }}>X</Button>
         <List>
-          <List.Item prefix={<UserOutline />} onClick={() => console.log("Profile")}>Profile</List.Item>
-          <List.Item prefix={<SetOutline />} onClick={() => console.log("Settings")}>Settings</List.Item>
-          <List.Item prefix={<CloseOutline />} style={{ color: "red" }}>Logout</List.Item>
+        <List.Item prefix={<UserOutline />} onClick={() => navigate(`/Users/profile/${user.user.userId}`)}>
+        Profile
+      </List.Item>
+      <List.Item prefix={<SetOutline />} onClick={() => navigate("/settings")}>
+        Settings
+      </List.Item>
+      <List.Item prefix={<CloseOutline />} style={{ color: "red" }} onClick={() => navigate("/")}>
+        Logout
+      </List.Item>
         </List>
       </Popup>
     </div>

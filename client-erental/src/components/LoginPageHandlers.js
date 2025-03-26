@@ -13,18 +13,22 @@ export const handleLogin = async (credentials, dispatch, navigate) => {
 
     const data = await response.json();
 
+    console.log("API Response:", data); 
     if (!response.ok) {
       throw new Error(data.message || "Sai tài khoản hoặc mật khẩu!");
     }
 
-    dispatch(loginSuccess(data)); // Đăng nhập thành công
+     dispatch(loginSuccess({ token: data.token, user: data.user }));
 
-    // 👉 Chỉ chuyển trang nếu đăng nhập thành công
+     localStorage.setItem("token", data.token);
+     localStorage.setItem("user", JSON.stringify(data.user));
+
+    dispatch(loginSuccess(data)); 
+
     navigate("/dashboard");
   } catch (error) {
     dispatch(loginFailure(error.message));
 
-    // Hiển thị thông báo lỗi
     Toast.show({
       content: error.message,
       duration: 2000,

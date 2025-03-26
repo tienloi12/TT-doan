@@ -1,0 +1,94 @@
+body {
+    margin: 0;
+    padding: 0;
+  }
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #76BBD0, #76BBD000);
+  padding: 20px;
+  overflow-y: auto;
+  max-height: 100vh;
+
+  .ant-nav-bar {
+    width: 100%;
+    background-color: #1677ff;
+    color: white;
+  }
+
+  .profile-title {
+    text-align: center;
+    margin-bottom: 20px;
+
+    .title {
+      font-size: 26px;
+      font-weight: bold;
+      color: #222;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: #555;
+    }
+  }
+
+  .profile-card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 420px;
+
+    .ant-form-item {
+      .ant-input {
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 14px;
+      }
+    }
+
+    .profile-btn {
+      margin-top: 20px;
+      font-size: 16px;
+      border-radius: 10px;
+      background-color: #1677ff;
+      border: none;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      transition: background 0.3s;
+
+      &:hover {
+        background-color: #125ec8;
+      }
+    }
+  }
+
+  .error-message {
+    color: red;
+    text-align: center;
+    margin-top: 12px;
+    font-size: 14px;
+  }
+
+  .back-link {
+    text-align: center;
+    margin-top: 20px;
+    color: #1677ff;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+    transition: color 0.3s;
+
+    &:hover {
+      color: #125ec8;
+      text-decoration: underline;
+    }
+  }
+}

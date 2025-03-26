@@ -8,7 +8,7 @@ const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [token, setToken] = useState(""); // Lưu token từ API
+  const [token, setToken] = useState(""); 
   const [loading, setLoading] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const navigate = useNavigate();
@@ -20,7 +20,6 @@ const ForgotPasswordPage = () => {
       <Form layout="vertical">
         {!isEmailVerified ? (
           <>
-            {/* Form kiểm tra email */}
             <Form.Item label="Email Address">
               <Input
                 placeholder="Enter your email"
@@ -35,7 +34,6 @@ const ForgotPasswordPage = () => {
           </>
         ) : (
           <>
-            {/* Form nhập mật khẩu mới */}
             <Form.Item label="New Password">
               <Input
                 placeholder="Enter new password"

@@ -9,6 +9,8 @@ import InUsePage from "./layouts/InUsePage";
 import InformationPage from "./layouts/InformationPage";
 import NotificationPage from "./layouts/NotificationPage";
 import ForgotPasswordPage from "./layouts/ForgotPasswordPage";
+import ProfilePage from "./layouts/ProfilePage";
+import UpdateProfile from "./layouts/UpdateProfilePage";
 
 
 
@@ -25,6 +27,8 @@ function App() {
         <Route path="/information" element={<InformationPage />} />
         <Route path="/notification" element={<NotificationPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/Users/profile/:username" element={<ProfilePage />} />
+        <Route path="/Users/update-profile/:username" element={<UpdateProfile />} />
       </Routes>
     </Router>
   );

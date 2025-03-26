@@ -1,6 +1,5 @@
 import { Toast } from "antd-mobile";
 
-// Kiểm tra email hợp lệ
 export const handleCheckEmail = async (email, setLoading, setIsEmailVerified, setToken) => {
     if (!email) {
       Toast.show({ content: "Please enter your email!", position: "top" });
@@ -22,7 +21,6 @@ export const handleCheckEmail = async (email, setLoading, setIsEmailVerified, se
   
       Toast.show({ content: "Email verified! Enter new password", position: "top" });
   
-      // Lưu token để sử dụng khi đặt lại mật khẩu
       setToken(data.token);
       setIsEmailVerified(true);
     } catch (error) {
@@ -31,7 +29,7 @@ export const handleCheckEmail = async (email, setLoading, setIsEmailVerified, se
     setLoading(false);
   };
 
-// Đổi mật khẩu mới
+
 export const handleResetPassword = async (token, newPassword, confirmPassword, setLoading, navigate) => {
     if (!token) {
       Toast.show({ content: "Missing token!", position: "top" });
@@ -61,7 +59,7 @@ export const handleResetPassword = async (token, newPassword, confirmPassword, s
   
       Toast.show({ content: "Password reset successful!", position: "top" });
   
-      navigate("/"); // Chuyển về trang login sau khi đổi mật khẩu thành công
+      navigate("/");
     } catch (error) {
       Toast.show({ content: error.message, position: "top" });
     }

@@ -21,7 +21,7 @@ export const handleRegister = async (userData,dispatch,navigate) => {
         throw new Error(data.message || "Registration failed");
       }
       message.success("Đăng ký thành công! Chuyển hướng đến trang đăng nhập...");
-      setTimeout(() => navigate("/"), 1500); // Điều hướng sau 1.5 giây
+      setTimeout(() => navigate("/"), 1500); 
     } catch (error) {
       dispatch({ type: "REGISTER_FAILURE", payload: error.message });
       message.error(`Lỗi đăng ký: ${error.message}`);

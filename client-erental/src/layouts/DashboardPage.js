@@ -12,13 +12,12 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { MoreOutline, FilterOutline } from "antd-mobile-icons";
+import { FilterOutline } from "antd-mobile-icons";
 import "../../src/styles/DashboardPage.scss";
 import TabBarComponent from "./Tarbar";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  // Dữ liệu biểu đồ đường (Doanh thu)
   const revenueData = [
     { month: "Jan", value: 12000 },
     { month: "Feb", value: 15000 },
@@ -34,7 +33,6 @@ const Dashboard = () => {
     // { month: "Dec", value: 32000 },
   ];
 
-  // Dữ liệu biểu đồ tròn (Trạng thái thuê)
   const rentalStatus = [
     { name: "Đồ sẵn sàng", value: 654, color: "#1890ff" },
     { name: "Đồ bán", value: 564, color: "#f5222d" },
@@ -55,12 +53,11 @@ const Dashboard = () => {
   );
   return (
     <div className="dashboard-container">
-      {/* Thanh điều hướng */}
-      <NavBar onBack={() => navigate("/")} right={<MoreOutline fontSize={24} />}>
+
+      <NavBar onBack={() => navigate("/")}>
         Dashboard
       </NavBar>
 
-      {/* Bộ lọc */}
       <div className="filter-section">
         <FilterOutline />
         <Button color="primary" fill="outline" size="small">
@@ -74,7 +71,6 @@ const Dashboard = () => {
         </Button>
       </div>
 
-      {/* Thông tin tổng quan */}
       <div className="dashboard-info">
         <p>
           Current time: <span className="date">15 December, 2022</span>
@@ -95,7 +91,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Biểu đồ doanh thu */}
       <div className="chart-container">
         <h3>
           Total Revenue <span className="increase">+31.9%</span>
@@ -123,7 +118,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Biểu đồ trạng thái thuê */}
       <div className="chart-container rental-status">
         <h3>Rental Status</h3>
         <div className="chart-wrapper">

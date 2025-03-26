@@ -21,14 +21,11 @@ namespace server_eRental.Controllers
             _context = context;
         }
 
-        // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return await _context.Users.ToListAsync();
         }
-
-        // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
@@ -41,9 +38,6 @@ namespace server_eRental.Controllers
 
             return user;
         }
-
-        // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(int id, User user)
         {
@@ -72,9 +66,6 @@ namespace server_eRental.Controllers
 
             return NoContent();
         }
-
-        // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
@@ -106,13 +97,8 @@ namespace server_eRental.Controllers
 
                 return Ok(new { message = "Registration successful", user });
             }
-
-
-
-
-
-      [HttpPost("check-email")]
-public async Task<IActionResult> CheckEmail([FromBody] ForgotPasswordRequest request)
+        [HttpPost("check-email")]
+        public async Task<IActionResult> CheckEmail([FromBody] ForgotPasswordRequest request)
 {
 
             Console.WriteLine($"Received email: {request.Email}");
@@ -124,9 +110,8 @@ public async Task<IActionResult> CheckEmail([FromBody] ForgotPasswordRequest req
 
     return Ok(new { message = "Email verified" });
 }
-
         [HttpPost("forgot-password")]
-public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
 {
     var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
     if (user == null)
@@ -134,20 +119,17 @@ public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest
         return NotFound(new { message = "Email not found" });
     }
 
-    // Tạo token reset mật khẩu
     user.ResetToken = Guid.NewGuid().ToString();
-    user.ResetTokenExpiry = DateTime.UtcNow.AddHours(1); // Hết hạn sau 1 giờ
+    user.ResetTokenExpiry = DateTime.UtcNow.AddHours(1); 
 
     await _context.SaveChangesAsync();
 
-    // ⚠️ Thay vì gửi email, trả token về frontend để test
     return Ok(new { message = "Reset token generated", token = user.ResetToken });
 }
-
-      [HttpPost("reset-password")]
-public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
 {
-    Console.WriteLine($"Received Token: {request.Token}"); // Debug token
+    Console.WriteLine($"Received Token: {request.Token}"); 
 
     var user = await _context.Users.FirstOrDefaultAsync(u => u.ResetToken == request.Token);
     if (user == null || user.ResetTokenExpiry < DateTime.UtcNow)
@@ -155,8 +137,7 @@ public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest r
         return BadRequest(new { message = "Invalid or expired reset token" });
     }
 
-    // Cập nhật mật khẩu mới
-    user.PasswordHash = request.NewPassword; // Nếu không băm mật khẩu
+    user.PasswordHash = request.NewPassword; 
     user.ResetToken = null;
     user.ResetTokenExpiry = null;
 
@@ -164,9 +145,6 @@ public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest r
 
     return Ok(new { message = "Password reset successful" });
 }
-
-
-        // DELETE: api/Users/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
@@ -181,10 +159,51 @@ public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest r
 
             return NoContent();
         }
-
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.UserId == id);
         }
+       [HttpGet("profile/{userId}")]
+public async Task<IActionResult> GetUserProfile(int userId) 
+{
+    var user = await _context.Users
+        .Where(u => u.UserId == userId) 
+        .Select(u => new 
+        {
+            u.UserId,
+            u.Username,
+            u.Email,
+            u.Phone,
+            u.Role,
+            u.CreatedAt
+        })
+        .FirstOrDefaultAsync();
+
+    if (user == null)
+    {
+        return NotFound(new { message = "User not found" });
+    }
+
+    return Ok(user);
+}
+        [HttpPut("update-profile/{userId}")]
+public async Task<IActionResult> UpdateUserProfile(int userId, [FromBody] UpdateProfile model)
+{
+    var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+
+    if (user == null)
+    {
+        return NotFound(new { message = "User not found" });
+    } 
+    user.Username = model.Username ?? user.Username;
+    user.Email = model.Email ?? user.Email;
+    user.Phone = model.Phone ?? user.Phone;
+    user.PasswordHash = model.Password ?? user.PasswordHash;
+
+    _context.Users.Update(user);
+    await _context.SaveChangesAsync();
+
+    return Ok(new { message = "Profile updated successfully", user });
+}
     }
 }

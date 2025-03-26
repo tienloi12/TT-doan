@@ -1,6 +1,6 @@
 import React from "react";
 import { NavBar, Card, Button } from "antd-mobile";
-import {  FilterOutline } from "antd-mobile-icons";
+import {  MoreOutline } from "antd-mobile-icons";
 import { useNavigate } from "react-router-dom";
 import "../../src/styles/InUsePage.scss"
 import TabBarComponent from "./Tarbar";
@@ -40,7 +40,7 @@ const InUsePage = () => {
   return (
     <div className="in-use-page">
       {/* Header */}
-      <NavBar onBack={() => navigate(-1)} right={<FilterOutline className="filter-icon" />}>
+      <NavBar onBack={() => navigate(-1)} right={<MoreOutline fontSize={24}  />}>
         In-Use
       </NavBar>
 
