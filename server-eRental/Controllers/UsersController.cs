@@ -87,7 +87,7 @@ namespace server_eRental.Controllers
                 Username = model.Username,
                 Email = model.Email,
                 Phone = model.Phone,
-                PasswordHash = model.PasswordHash, // Nếu không băm mật khẩu
+                PasswordHash = model.PasswordHash, 
                 Role = "Customer",
                 CreatedAt = DateTime.UtcNow
                 };

@@ -20,6 +20,7 @@ namespace server_eRental.Models
 
         public virtual DbSet<Payment> Payments { get; set; }
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<Rental> Rentals { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
         public virtual DbSet<User> Users { get; set; }
@@ -112,6 +113,38 @@ namespace server_eRental.Models
                     .HasMaxLength(255)
                     .HasColumnName("name");
 
+                entity.Property(e => e.Price)
+                    .HasColumnType("decimal(10, 2)")
+                    .HasColumnName("price");
+
+            });
+
+            modelBuilder.Entity<Order>(entity =>
+            {
+                entity.Property(e => e.OrderId).HasColumnName("order_id");
+
+                entity.Property(e => e.Category)
+                    .HasMaxLength(100)
+                    .HasColumnName("category");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("created_at")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Description)
+                    .HasColumnType("text")
+                    .HasColumnName("description");
+
+                entity.Property(e => e.ImageUrl)
+                    .HasMaxLength(255)
+                    .HasColumnName("image_url");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .HasColumnName("name");
+
                 entity.Property(e => e.OwnerId).HasColumnName("owner_id");
 
                 entity.Property(e => e.Price)
@@ -125,9 +158,9 @@ namespace server_eRental.Models
                     .HasDefaultValueSql("('available')");
 
                 entity.HasOne(d => d.Owner)
-                    .WithMany(p => p.Products)
+                    .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.OwnerId)
-                    .HasConstraintName("FK__Products__owner___4F7CD00D");
+                    .HasConstraintName("FK__Orders__owner___4F7CD00D");
             });
 
             modelBuilder.Entity<Rental>(entity =>
@@ -145,7 +178,7 @@ namespace server_eRental.Models
                     .HasColumnType("datetime")
                     .HasColumnName("end_date");
 
-                entity.Property(e => e.ProductId).HasColumnName("product_id");
+                entity.Property(e => e.OrderId).HasColumnName("order_id");
 
                 entity.Property(e => e.StartDate)
                     .HasColumnType("datetime")
@@ -166,10 +199,10 @@ namespace server_eRental.Models
                     .HasForeignKey(d => d.CustomerId)
                     .HasConstraintName("FK__Rentals__custome__5535A963");
 
-                entity.HasOne(d => d.Product)
+                entity.HasOne(d => d.Order)
                     .WithMany(p => p.Rentals)
-                    .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("FK__Rentals__product__5629CD9C");
+                    .HasForeignKey(d => d.OrderId)
+                    .HasConstraintName("FK__Rentals__order__5629CD9C");
             });
 
             modelBuilder.Entity<Review>(entity =>
@@ -185,16 +218,16 @@ namespace server_eRental.Models
                     .HasColumnName("created_at")
                     .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.ProductId).HasColumnName("product_id");
+                entity.Property(e => e.OrderId).HasColumnName("order_id");
 
                 entity.Property(e => e.Rating).HasColumnName("rating");
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 
-                entity.HasOne(d => d.Product)
+                entity.HasOne(d => d.Order)
                     .WithMany(p => p.Reviews)
-                    .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("FK__Reviews__product__619B8048");
+                    .HasForeignKey(d => d.OrderId)
+                    .HasConstraintName("FK__Reviews__order__619B8048");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Reviews)
@@ -328,7 +361,7 @@ namespace server_eRental.Models
             {
                 entity.ToTable("Wishlist");
 
-                entity.HasIndex(e => new { e.UserId, e.ProductId }, "UQ__Wishlist__FDCE10D1CA5D4ED5")
+                entity.HasIndex(e => new { e.UserId, e.OrderId }, "UQ__Wishlist__FDCE10D1CA5D4ED5")
                     .IsUnique();
 
                 entity.Property(e => e.WishlistId).HasColumnName("wishlist_id");
@@ -338,13 +371,13 @@ namespace server_eRental.Models
                     .HasColumnName("created_at")
                     .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.ProductId).HasColumnName("product_id");
+                entity.Property(e => e.OrderId).HasColumnName("order_id");
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 
-                entity.HasOne(d => d.Product)
+                entity.HasOne(d => d.Order)
                     .WithMany(p => p.Wishlists)
-                    .HasForeignKey(d => d.ProductId)
+                    .HasForeignKey(d => d.OrderId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK__Wishlist__produc__68487DD7");
 

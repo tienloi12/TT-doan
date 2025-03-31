@@ -15,7 +15,7 @@ namespace server_eRental.Models
 
         public int RentalId { get; set; }
         public int? CustomerId { get; set; }
-        public int? ProductId { get; set; }
+        public int? OrderId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public decimal TotalPrice { get; set; }
@@ -23,7 +23,7 @@ namespace server_eRental.Models
         public DateTime? CreatedAt { get; set; }
 
         public virtual User Customer { get; set; }
-        public virtual Product Product { get; set; }
+        public virtual Order Order { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
         public virtual ICollection<UserVoucher> UserVouchers { get; set; }
     }

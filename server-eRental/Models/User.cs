@@ -9,7 +9,7 @@ namespace server_eRental.Models
     {
         public User()
         {
-            Products = new HashSet<Product>();
+            Orders = new HashSet<Order>();
             Rentals = new HashSet<Rental>();
             Reviews = new HashSet<Review>();
             UserVouchers = new HashSet<UserVoucher>();
@@ -26,7 +26,7 @@ namespace server_eRental.Models
         public DateTime? ResetTokenExpiry { get; set; }
         public DateTime? CreatedAt { get; set; }
 
-        public virtual ICollection<Product> Products { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Rental> Rentals { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
         public virtual ICollection<UserVoucher> UserVouchers { get; set; }
