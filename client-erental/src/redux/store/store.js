@@ -5,6 +5,7 @@ import { thunk } from "redux-thunk";
 import  loginReducer  from "../../redux/reducers/LoginReducer";
 import registerReducer from "../reducers/RegisterReducer";
 import profileReducer from "../reducers/ProfileReducer";
+import { productReducer } from "../reducers/ProductReducer";
 
 const persistConfig = {
   key: "root",
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   login: loginReducer,
   register: registerReducer,
   profile: profileReducer,
+  product: productReducer,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

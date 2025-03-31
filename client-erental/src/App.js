@@ -11,6 +11,7 @@ import NotificationPage from "./layouts/NotificationPage";
 import ForgotPasswordPage from "./layouts/ForgotPasswordPage";
 import ProfilePage from "./layouts/ProfilePage";
 import UpdateProfile from "./layouts/UpdateProfilePage";
+import ProductList from "./layouts/ProductPage";
 
 
 
@@ -29,6 +30,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/Users/profile/:username" element={<ProfilePage />} />
         <Route path="/Users/update-profile/:username" element={<UpdateProfile />} />
+        <Route path="/product" element={<ProductList />} />
       </Routes>
     </Router>
   );

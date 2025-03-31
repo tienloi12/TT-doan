@@ -18,57 +18,70 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <div className="login-title">
-        <h2 className="title">Welcome Back!</h2>
-        <p className="subtitle">Let's login to eRental App!</p>
+    {/* Login Title Section */}
+    <div className="login-title">
+      <h2 className="title">Welcome Back!</h2>
+      <p className="subtitle">Let's login to eRental App!</p>
+    </div>
+  
+    {/* Login Form Card */}
+    <div className="login-card">
+      <Form
+        layout="vertical"
+        onFinish={onFinish} // Handles form submission
+        footer={
+          // Login Button
+          <Button
+            block
+            type="submit"
+            color="primary"
+            className="login-btn"
+            loading={loading} // Shows loading spinner when processing
+          >
+            Login
+          </Button>
+        }
+      >
+        {/* Email Input Field */}
+        <Form.Item
+          label="Email Address"
+          name="email"
+          rules={[{ required: true, message: "Enter email address!" }]}
+        >
+          <Input placeholder="Enter email address" prefix={<MailOutline />} />
+        </Form.Item>
+  
+        {/* Password Input Field */}
+        <Form.Item
+          label="Password"
+          name="password"
+          rules={[{ required: true, message: "Enter password!" }]}
+        >
+          <Input
+            placeholder="Enter account password"
+            type="password"
+            prefix={<LockOutline />}
+          />
+        </Form.Item>
+      </Form>
+  
+      {/* Error Message Display */}
+      {error && <p className="error-message">{error}</p>}
+  
+      {/* Forgot Password Link */}
+      <div
+        className="forgot-password"
+        onClick={() => navigate("/forgot-password")}
+      >
+        Forgot Password?
       </div>
-      <div className="login-card">
-        <Form
-          layout="vertical"
-          onFinish={onFinish}
-          footer={
-            <Button
-              block
-              type="submit"
-              color="primary"
-              className="login-btn"
-              loading={loading}
-            >
-              Login
-            </Button>
-          }
-        >
-          <Form.Item
-            label="Email Address"
-            name="email"
-            rules={[{ required: true, message: "Enter email address!" }]}
-          >
-            <Input placeholder="Enter email address" prefix={<MailOutline />} />
-          </Form.Item>
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[{ required: true, message: "Enter password!" }]}
-          >
-            <Input
-              placeholder="Enter account password"
-              type="password"
-              prefix={<LockOutline />}
-            />
-          </Form.Item>
-        </Form>
-        {error && <p className="error-message">{error}</p>}
-        <div
-          className="forgot-password"
-          onClick={() => navigate("/forgot-password")}
-        >
-          Forgot Password?
-        </div>
-        <div className="register-link" onClick={() => navigate("/register")}>
-          Register Instead
-        </div>
+  
+      {/* Register Link */}
+      <div className="register-link" onClick={() => navigate("/register")}>
+        Register Instead
       </div>
     </div>
+  </div>
   );
 };
 

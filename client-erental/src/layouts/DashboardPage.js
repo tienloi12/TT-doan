@@ -45,19 +45,22 @@ const Dashboard = () => {
     <div className="custom-legend">
       {payload.map((entry, index) => (
         <div key={`legend-${index}`} className="legend-item">
-          <div className="legend-color" style={{ backgroundColor: entry.color }}></div>
-          <span>{entry.value} - {entry.name}</span>
+          <div
+            className="legend-color"
+            style={{ backgroundColor: entry.color }}
+          ></div>
+          <span>
+            {entry.value} - {entry.name}
+          </span>
         </div>
       ))}
     </div>
   );
   return (
     <div className="dashboard-container">
-
-      <NavBar onBack={() => navigate("/")}>
-        Dashboard
-      </NavBar>
-
+      {/* Header */}
+      <NavBar onBack={() => navigate("/")}>Dashboard</NavBar>
+      {/* Filter */}
       <div className="filter-section">
         <FilterOutline />
         <Button color="primary" fill="outline" size="small">
@@ -70,7 +73,7 @@ const Dashboard = () => {
           Year
         </Button>
       </div>
-
+      {/* Dashboard Info */}
       <div className="dashboard-info">
         <p>
           Current time: <span className="date">15 December, 2022</span>
@@ -90,7 +93,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-
+      {/* Revenue Chart */}
       <div className="chart-container">
         <h3>
           Total Revenue <span className="increase">+31.9%</span>
@@ -114,10 +117,9 @@ const Dashboard = () => {
               />
             </LineChart>
           </ResponsiveContainer>
-          
         </div>
       </div>
-
+      {/* Rental Status Chart */}
       <div className="chart-container rental-status">
         <h3>Rental Status</h3>
         <div className="chart-wrapper">
@@ -143,6 +145,7 @@ const Dashboard = () => {
         </div>
         <Divider />
       </div>
+      {/* Bottom Navigation */}
       <TabBarComponent />
     </div>
   );

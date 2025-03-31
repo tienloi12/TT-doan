@@ -39,72 +39,87 @@ const StayView = () => {
 
   return (
     <div className="stay-view">
-      <NavBar
-        onBack={() => navigate("/dashboard")}
-        right={<MoreOutline fontSize={24} />}
-      >
-        Stay view
-      </NavBar>
-
-      <div className="filter-section">
-        <Button className="filter-btn" shape="rounded">
-          <FilterOutline /> 25/12/2024
-        </Button>
-        <div className="date-columns">
-          <div className="date">Wed 26</div>
-          <div className="date">Wed 27</div>
-          <div className="date">Wed 28</div>
-        </div>
+    {/* Navigation Bar with back button and more options */}
+    <NavBar
+      onBack={() => navigate("/dashboard")}
+      right={<MoreOutline fontSize={24} />}
+    >
+      Stay View
+    </NavBar>
+  
+    {/* Filter Section with date selection */}
+    <div className="filter-section">
+      <Button className="filter-btn" shape="rounded">
+        <FilterOutline /> 25/12/2024
+      </Button>
+      <div className="date-columns">
+        <div className="date">Wed 26</div>
+        <div className="date">Wed 27</div>
+        <div className="date">Wed 28</div>
       </div>
-
-      <div className="stay-table">
-        <div>
-          <List renderHeader={() => "Đồ văn phòng"}>
-            <List.Item className="custom-list-item">
-              <div className="custom-flex">
-                <div className="title">
-                  <FilterOutline />
-                  <span>Đồ văn phòng</span>
-                </div>
-                <div>0</div>
-                <div>0</div>
-                <div>0</div>
-              </div>
-            </List.Item>
-            {data.map((item, index) => (
-              <List.Item key={index} className="custom-list-item">
-                <div className="custom-flex">
-                  <div>{item.room}</div>
-                  <div>{item.guest}</div>
-                  <div></div>
-                  <div></div>
-                </div>
-              </List.Item>
-            ))}
-            <List.Item className="custom-list-item">
-              <div className="custom-flex">
-                <div className="title" onClick={() => navigate("/availability")}>
-                  Rental Availability (#)
-                </div>
-                <div>56</div>
-                <div>56</div>
-                <div>56</div>
-              </div>
-            </List.Item>
-            <List.Item className="custom-list-item">
-              <div className="custom-flex">
-                <div className="title">Occupancy (%)</div>
-                <div>20</div>
-                <div>56</div>
-                <div>56</div>
-              </div>
-            </List.Item>
-          </List>
-        </div>
-      </div>
-      <Divider />
-      <TabBarComponent />
     </div>
+  
+    {/* Stay Information Table */}
+    <div className="stay-table">
+      <div>
+        {/* Office Equipment Header */}
+        <List renderHeader={() => "Office Equipment"}>
+          {/* Office Equipment Summary */}
+          <List.Item className="custom-list-item">
+            <div className="custom-flex">
+              <div className="title">
+                <FilterOutline />
+                <span>Office Equipment</span>
+              </div>
+              <div>0</div>
+              <div>0</div>
+              <div>0</div>
+            </div>
+          </List.Item>
+  
+          {/* Dynamic Data Rows */}
+          {data.map((item, index) => (
+            <List.Item key={index} className="custom-list-item">
+              <div className="custom-flex">
+                <div>{item.room}</div>
+                <div>{item.guest}</div>
+                <div></div>
+                <div></div>
+              </div>
+            </List.Item>
+          ))}
+  
+          {/* Rental Availability Section */}
+          <List.Item className="custom-list-item">
+            <div className="custom-flex">
+              <div className="title" onClick={() => navigate("/availability")}>
+                Rental Availability (#)
+              </div>
+              <div>56</div>
+              <div>56</div>
+              <div>56</div>
+            </div>
+          </List.Item>
+  
+          {/* Occupancy Percentage Section */}
+          <List.Item className="custom-list-item">
+            <div className="custom-flex">
+              <div className="title">Occupancy (%)</div>
+              <div>20</div>
+              <div>56</div>
+              <div>56</div>
+            </div>
+          </List.Item>
+        </List>
+      </div>
+    </div>
+  
+    {/* Divider Line */}
+    <Divider />
+  
+    {/* Bottom Navigation */}
+    <TabBarComponent />
+  </div>
   );
 };
 

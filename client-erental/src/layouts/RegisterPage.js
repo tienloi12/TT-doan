@@ -23,26 +23,30 @@ const Register = () => {
 
   return (
     <div className="register-container">
+      {/* Registration Title Section */}
       <div className="register-title">
         <h2 className="title">Create an Account</h2>
         <p className="subtitle">Join eRental App today!</p>
       </div>
+
+      {/* Registration Form Card */}
       <div className="register-card">
         <Form
           layout="vertical"
-          onFinish={onFinish}
+          onFinish={onFinish} // Function to handle form submission
           footer={
             <Button
               block
               type="submit"
               color="primary"
               className="register-btn"
-              loading={loading}
+              loading={loading} // Shows loading spinner when registering
             >
               Register
             </Button>
           }
         >
+          {/* Full Name Field */}
           <Form.Item
             label="Full Name"
             name="username"
@@ -53,6 +57,8 @@ const Register = () => {
               prefix={<UserOutline />}
             />
           </Form.Item>
+
+          {/* Email Field */}
           <Form.Item
             label="Email Address"
             name="email"
@@ -60,6 +66,8 @@ const Register = () => {
           >
             <Input placeholder="Enter email address" prefix={<MailOutline />} />
           </Form.Item>
+
+          {/* Phone Number Field */}
           <Form.Item
             label="Phone Number"
             name="phone"
@@ -70,6 +78,8 @@ const Register = () => {
               prefix={<PhonebookOutline />}
             />
           </Form.Item>
+
+          {/* Password Field */}
           <Form.Item
             label="Password"
             name="passwordhash"
@@ -82,12 +92,15 @@ const Register = () => {
             />
           </Form.Item>
         </Form>
-        {error && <p className="error-message">{error}</p>}
-        <div className="login-link" onClick={() => navigate("/")}>
-        Already have an account?
-      </div>
-      </div>
 
+        {/* Display error message if registration fails */}
+        {error && <p className="error-message">{error}</p>}
+
+        {/* Link to Login Page */}
+        <div className="login-link" onClick={() => navigate("/")}>
+          Already have an account?
+        </div>
+      </div>
     </div>
   );
 };

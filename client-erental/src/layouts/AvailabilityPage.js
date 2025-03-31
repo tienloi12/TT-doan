@@ -15,7 +15,7 @@ const RentalAvailability = () => {
       >
         Rental Availability (#)
       </NavBar>
-      
+      {/* Filter*/}
      <div className="filter-section">
             <Button className="filter-btn" shape="rounded">
               <FilterOutline /> 25/12/2024
