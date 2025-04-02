@@ -49,7 +49,7 @@ public IActionResult Login([FromBody] Login model)
         var token = GenerateJwtToken(user);
         return Ok(new { token , user = new
             {
-                 userId = user.UserId,
+                userId = user.UserId,
                 username = user.Username,
                 email = user.Email,
                 phone = user.Phone,

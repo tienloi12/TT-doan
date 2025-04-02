@@ -22,5 +22,6 @@ namespace server_eRental
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
     }
 }

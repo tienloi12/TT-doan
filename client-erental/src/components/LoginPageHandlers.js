@@ -3,7 +3,7 @@ import { loginSuccess, loginFailure } from "../redux/actions/LoginActions";
 
 export const handleLogin = async (credentials, dispatch, navigate) => {
   try {
-    const response = await fetch("https://localhost:5001/api/Logins/login", {
+    const response = await fetch("http://localhost:5000/api/Logins/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

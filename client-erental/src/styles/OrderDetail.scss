@@ -1,0 +1,77 @@
+// Đặt các màu sắc chính trong hệ thống để dễ dàng thay đổi
+$primary-color: #4caf50;
+$secondary-color: #ff5722;
+$background-color: #f9f9f9;
+$card-bg-color: #fff;
+$border-radius: 8px;
+$shadow-color: rgba(0, 0, 0, 0.1);
+
+.order-detail-container {
+  padding: 20px;
+  background-color: $background-color;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.order-detail-card {
+  border-radius: $border-radius;
+  box-shadow: 0 4px 8px $shadow-color;
+  margin-bottom: 20px;
+  background-color: $card-bg-color;
+  padding: 20px;
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 6px 12px $shadow-color;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  .rental-info {
+    margin-top: 10px;
+
+    p {
+      font-size: 1rem;
+      margin: 8px 0;
+      color: #555;
+      line-height: 1.5;
+
+      strong {
+        color: #333;
+      }
+    }
+  }
+
+  .payment-info {
+    margin-top: 20px;
+    ul {
+      padding-left: 20px;
+
+      li {
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 8px;
+      }
+    }
+  }
+}
+
+.order-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.loading-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #888;
+}

@@ -63,7 +63,7 @@ const ProductList = () => {
               </div>
               <Button
               className="rent-button"
-            //   onClick={() => navigate(`/rent/${product.productId}`)}
+              onClick={() =>  navigate(`/rent/${product.productId}`)}
             >
               <ShoppingCartOutlined className="rent-icon" />
               Thuê ngay

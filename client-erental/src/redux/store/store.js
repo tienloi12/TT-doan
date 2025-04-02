@@ -6,6 +6,7 @@ import  loginReducer  from "../../redux/reducers/LoginReducer";
 import registerReducer from "../reducers/RegisterReducer";
 import profileReducer from "../reducers/ProfileReducer";
 import { productReducer } from "../reducers/ProductReducer";
+import orderReducer from "../reducers/OrderReducer";
 
 const persistConfig = {
   key: "root",
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   register: registerReducer,
   profile: profileReducer,
   product: productReducer,
+  orders: orderReducer,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

@@ -25,5 +25,29 @@ namespace eRental.Controllers
             var products = await _context.Products.ToListAsync();
             return Ok(products);
         }
+        [HttpGet("{productId}")]
+        public async Task<ActionResult<Product>> GetProductById(int productId)
+        {
+            var product = await _context.Products
+                .Where(p => p.ProductId == productId)
+                .Select(p => new
+                {
+                    p.ProductId,
+                    p.Name,
+                    p.Description,
+                    p.Category,
+                    p.Price,
+                    p.ImageUrl,
+                    p.CreatedAt
+                })
+                .FirstOrDefaultAsync();
+
+            if (product == null)
+            {
+                return NotFound(new { message = "Không tìm thấy sản phẩm." });
+            }
+
+            return Ok(product);
+        }
     }
 }

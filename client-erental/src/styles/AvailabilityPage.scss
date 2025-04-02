@@ -1,29 +1,109 @@
 .filter-section {
-    padding: 8px 16px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  flex-wrap: wrap;
+
+  .date-columns {
     display: flex;
-    align-items: center;      
-    background: #fff;
-    border-bottom: 1px solid #ddd;
- 
-    .date-columns {
-      display: flex;
-      gap: 12px;
-      .date {
-        width: 60px;
-        text-align: center;
-        background: #eef3ff;
-        padding: 4px 8px;
-        border-radius: 4px;
-        color: #007bff;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    overflow-x: auto;
+    padding-bottom: 5px;
+    width: 100%;
+    white-space: nowrap;
+
+    .date {
+      min-width: 60px;
+      text-align: center;
+      background: #eef3ff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      color: #007bff;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+
+      &:hover {
+        background: #d0e0ff;
+        color: #0056b3;
       }
     }
   }
-  .filter-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: #f2f2f2;
-    border: none;
-    padding: 6px 12px;
-    font-size: 14px;
+}
+
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s, border 0.3s;
+
+  &:hover {
+    background: #e9ecef;
   }
+}
+.rental-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px 0;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  /* Hiệu ứng hover cho card */
+  &:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Căn giữa các nội dung trong card */
+  .rental-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .rental-info {
+    flex: 1;
+  }
+
+  .rental-info strong {
+    font-size: 1.1rem;
+    color: #333;
+  }
+
+  .rental-info p {
+    font-size: 0.9rem;
+    color: #555;
+    margin: 5px 0;
+  }
+
+  .rental-info .price {
+    font-weight: bold;
+    color: #e60000;
+  }
+
+  .rental-info .status {
+    color: #28a745;
+  }
+
+  .rental-info .dates {
+    color: #888;
+  }
+}
+

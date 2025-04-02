@@ -12,6 +12,8 @@ import ForgotPasswordPage from "./layouts/ForgotPasswordPage";
 import ProfilePage from "./layouts/ProfilePage";
 import UpdateProfile from "./layouts/UpdateProfilePage";
 import ProductList from "./layouts/ProductPage";
+import OrderDetail from "./layouts/OrderDetailPage";
+import RentPage from "./layouts/RentPage";
 
 
 
@@ -31,6 +33,8 @@ function App() {
         <Route path="/Users/profile/:username" element={<ProfilePage />} />
         <Route path="/Users/update-profile/:username" element={<UpdateProfile />} />
         <Route path="/product" element={<ProductList />} />
+        <Route path="/order/:orderId" element={<OrderDetail />} />
+        <Route path="/rent/:productId" element={<RentPage />} /> 
       </Routes>
     </Router>
   );
