@@ -14,7 +14,7 @@ namespace server_eRental.Models
         public string Comment { get; set; }
         public DateTime? CreatedAt { get; set; }
 
-        public virtual Order Order { get; set; }
+        public virtual Product Order { get; set; }
         public virtual User User { get; set; }
     }
 }

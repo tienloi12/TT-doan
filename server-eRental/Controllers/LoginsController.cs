@@ -34,7 +34,7 @@ namespace server_eRental.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Login>>> GetLogin()
         {
-            return await _context.Login.ToListAsync();
+            return await _context.Logins.ToListAsync();
         }
 
        [HttpPost("login")]

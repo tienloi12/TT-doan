@@ -7,6 +7,8 @@ import registerReducer from "../reducers/RegisterReducer";
 import profileReducer from "../reducers/ProfileReducer";
 import { productReducer } from "../reducers/ProductReducer";
 import orderReducer from "../reducers/OrderReducer";
+import notificationReducer from "../reducers/NotificationReducer";
+import rentalReducer from "../reducers/RentalReducer";
 
 const persistConfig = {
   key: "root",
@@ -20,6 +22,8 @@ const rootReducer = combineReducers({
   profile: profileReducer,
   product: productReducer,
   orders: orderReducer,
+  notifications: notificationReducer,
+  rentalStatus: rentalReducer,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

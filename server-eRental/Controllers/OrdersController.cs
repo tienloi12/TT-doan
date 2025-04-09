@@ -27,12 +27,6 @@ namespace server_eRental.Controllers
                 .Select(o => new
                 {
                     OrderId = o.OrderId,
-                    Name = o.Name,
-                    Description = o.Description,
-                    Category = o.Category,
-                    Price = o.Price,
-                    Status = o.Status,
-                    ImageUrl = o.ImageUrl,
                     CreatedAt = o.CreatedAt,
                     Rentals = o.Rentals.Select(r => new Rental
                     {
@@ -45,7 +39,7 @@ namespace server_eRental.Controllers
 
             return Ok(orders);
         }
-
+        
 
         [HttpGet("{orderId}")]
         public async Task<ActionResult<Order>> GetOrderById(int orderId)
@@ -54,16 +48,11 @@ namespace server_eRental.Controllers
                 .Where(o => o.OrderId == orderId)
                 .Include(o => o.Rentals)     // Lấy danh sách Rentals
                 .Include(o => o.Reviews)     // Lấy danh sách Reviews
-                .Include(o => o.Wishlists)   // Lấy danh sách Wishlists
+                .Include(o => o.Wishlists)
+                .Include(o => o.OrderProducts)  
                 .Select(o => new Order
                 {
                     OrderId = o.OrderId,
-                    Name = o.Name,
-                    Description = o.Description,
-                    Category = o.Category,
-                    Price = o.Price,
-                    Status = o.Status,
-                    ImageUrl = o.ImageUrl,
                     CreatedAt = o.CreatedAt,
                     Rentals = o.Rentals.Select(r => new Rental
                     {
@@ -82,6 +71,13 @@ namespace server_eRental.Controllers
                         WishlistId = w.WishlistId,
                         UserId = w.UserId,
                     }).ToList(),
+                    OrderProducts = o.OrderProducts.Select(od => new OrderProduct
+                    {
+                        OrderProductId = od.OrderProductId,
+                        OrderId = od.OrderId,
+                        ProductId = od.ProductId,
+                        Quantity = od.Quantity,
+                    }).ToList(),
                 })
                 .FirstOrDefaultAsync();
 
@@ -94,19 +90,32 @@ namespace server_eRental.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Order>> CreateOrder(Order order)
+        public async Task<IActionResult> CreateOrder([FromBody] Order order)
         {
             if (order == null)
             {
-                return BadRequest(new { message = "Dữ liệu đơn hàng không hợp lệ!" });
+                return BadRequest("Invalid data.");
+            }
+            foreach (var rental in order.Rentals)
+            {
+                rental.CreatedAt = DateTime.UtcNow;
+                rental.Status = "Pending";
             }
 
             order.CreatedAt = DateTime.UtcNow;
 
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
+            await _context.Orders.AddAsync(order);
 
-            return CreatedAtAction(nameof(GetOrderById), new { orderId = order.OrderId }, order);
+            try
+            {
+
+                await _context.SaveChangesAsync();
+                return Ok(order); 
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavBar, Button, Divider } from "antd-mobile";
 import { useNavigate } from "react-router-dom";
 import {
@@ -15,9 +15,47 @@ import {
 import { FilterOutline } from "antd-mobile-icons";
 import "../../src/styles/DashboardPage.scss";
 import TabBarComponent from "./Tarbar";
+import { setRentalStatus } from "../redux/actions/RentalActions";
+import { useDispatch, useSelector } from "react-redux";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const rentalStatus = useSelector((state) => state.rentalStatus.rentalStatus);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    fetch("https://localhost:5001/api/orders/status-summary")
+      .then((res) => res.json())
+      .then((data) => {
+        const statusWithColors = data.map((item) => ({
+          ...item,
+          color: getColorForStatus(item.name), // gán màu
+        }));
+        dispatch(setRentalStatus(statusWithColors));
+      })
+      .catch((err) => console.error("Lỗi load trạng thái:", err));
+  }, []);
+
+  const getColorForStatus = (status) => {
+    switch (status.toLowerCase()) {
+      case "sẵn sàng":
+        return "#1890ff";
+      case "đang thuê":
+        return "#1459ff";
+      case "đồ bán":
+        return "#f5222d";
+      case "cần giặt":
+        return "#faad14";
+      case "đồ hỏng":
+        return "#a0d911";
+      case "đang sửa":
+        return "#13c2c2";
+      case "ưu tiên":
+        return "#722ed1";
+      default:
+        return "#ccc";
+    }
+  };
+
   const revenueData = [
     { month: "Jan", value: 12000 },
     { month: "Feb", value: 15000 },
@@ -31,15 +69,6 @@ const Dashboard = () => {
     // { month: "Oct", value: 28000 },
     // { month: "Nov", value: 30000 },
     // { month: "Dec", value: 32000 },
-  ];
-
-  const rentalStatus = [
-    { name: "Đồ sẵn sàng", value: 654, color: "#1890ff" },
-    { name: "Đồ bán", value: 564, color: "#f5222d" },
-    { name: "Đồ cần giặt", value: 406, color: "#faad14" },
-    { name: "Đồ hỏng", value: 271, color: "#a0d911" },
-    { name: "Đồ đang sửa", value: 203, color: "#13c2c2" },
-    { name: "Đồ ưu tiên", value: 158, color: "#722ed1" },
   ];
   const CustomLegend = ({ payload }) => (
     <div className="custom-legend">

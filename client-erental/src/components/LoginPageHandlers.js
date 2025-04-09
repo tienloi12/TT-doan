@@ -23,8 +23,6 @@ export const handleLogin = async (credentials, dispatch, navigate) => {
      localStorage.setItem("token", data.token);
      localStorage.setItem("user", JSON.stringify(data.user));
 
-    dispatch(loginSuccess(data)); 
-
     navigate("/dashboard");
   } catch (error) {
     dispatch(loginFailure(error.message));

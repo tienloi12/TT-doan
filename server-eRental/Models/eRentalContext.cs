@@ -1,7 +1,6 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using server_eRental.Models;
 
 #nullable disable
 
@@ -18,17 +17,17 @@ namespace server_eRental.Models
         {
         }
 
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<OrderProduct> OrderProducts { get; set; }
         public virtual DbSet<Payment> Payments { get; set; }
         public virtual DbSet<Product> Products { get; set; }
-        public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<Rental> Rentals { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserVoucher> UserVouchers { get; set; }
         public virtual DbSet<Voucher> Vouchers { get; set; }
         public virtual DbSet<Wishlist> Wishlists { get; set; }
-
-
+        public virtual DbSet<Login> Logins { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -41,6 +40,40 @@ namespace server_eRental.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.Entity<Order>(entity =>
+            {
+                entity.Property(e => e.OrderId).HasColumnName("order_id");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("created_at");
+            });
+
+            modelBuilder.Entity<OrderProduct>(entity =>
+            {
+                entity.ToTable("OrderProduct");
+
+                entity.Property(e => e.OrderProductId).HasColumnName("order_product_id");
+
+                entity.Property(e => e.OrderId).HasColumnName("order_id");
+
+                entity.Property(e => e.ProductId).HasColumnName("product_id");
+
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.OrderProducts)
+                    .HasForeignKey(d => d.OrderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__OrderProd__order__2A164134");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.OrderProducts)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__OrderProd__produ__2B0A656D");
+            });
 
             modelBuilder.Entity<Payment>(entity =>
             {
@@ -116,51 +149,6 @@ namespace server_eRental.Models
                 entity.Property(e => e.Price)
                     .HasColumnType("decimal(10, 2)")
                     .HasColumnName("price");
-
-            });
-
-            modelBuilder.Entity<Order>(entity =>
-            {
-                entity.Property(e => e.OrderId).HasColumnName("order_id");
-
-                entity.Property(e => e.Category)
-                    .HasMaxLength(100)
-                    .HasColumnName("category");
-
-                entity.Property(e => e.CreatedAt)
-                    .HasColumnType("datetime")
-                    .HasColumnName("created_at")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.Description)
-                    .HasColumnType("text")
-                    .HasColumnName("description");
-
-                entity.Property(e => e.ImageUrl)
-                    .HasMaxLength(255)
-                    .HasColumnName("image_url");
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(255)
-                    .HasColumnName("name");
-
-                entity.Property(e => e.OwnerId).HasColumnName("owner_id");
-
-                entity.Property(e => e.Price)
-                    .HasColumnType("decimal(10, 2)")
-                    .HasColumnName("price");
-
-                entity.Property(e => e.Status)
-                    .IsRequired()
-                    .HasMaxLength(20)
-                    .HasColumnName("status")
-                    .HasDefaultValueSql("('available')");
-
-                entity.HasOne(d => d.Owner)
-                    .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.OwnerId)
-                    .HasConstraintName("FK__Orders__owner___4F7CD00D");
             });
 
             modelBuilder.Entity<Rental>(entity =>
@@ -202,7 +190,7 @@ namespace server_eRental.Models
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.Rentals)
                     .HasForeignKey(d => d.OrderId)
-                    .HasConstraintName("FK__Rentals__order__5629CD9C");
+                    .HasConstraintName("FK_Rentals_Orders");
             });
 
             modelBuilder.Entity<Review>(entity =>
@@ -227,7 +215,7 @@ namespace server_eRental.Models
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.Reviews)
                     .HasForeignKey(d => d.OrderId)
-                    .HasConstraintName("FK__Reviews__order__619B8048");
+                    .HasConstraintName("FK__Reviews__product__619B8048");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Reviews)
@@ -237,12 +225,6 @@ namespace server_eRental.Models
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.HasIndex(e => e.Email, "UQ__Users__AB6E6164A46FFC10")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.Username, "UQ__Users__F3DBC57255A411C1")
-                    .IsUnique();
-
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 
                 entity.Property(e => e.CreatedAt)
@@ -263,6 +245,10 @@ namespace server_eRental.Models
                 entity.Property(e => e.Phone)
                     .HasMaxLength(15)
                     .HasColumnName("phone");
+
+                entity.Property(e => e.ResetToken).HasMaxLength(255);
+
+                entity.Property(e => e.ResetTokenExpiry).HasColumnType("datetime");
 
                 entity.Property(e => e.Role)
                     .IsRequired()
@@ -390,9 +376,7 @@ namespace server_eRental.Models
 
             OnModelCreatingPartial(modelBuilder);
         }
-
+     
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
-        public DbSet<server_eRental.Models.Login> Login { get; set; }
     }
 }

@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { NavBar, Button, Card, Space } from "antd-mobile";
-import { FilterOutline} from "antd-mobile-icons";
+import { FilterOutline } from "antd-mobile-icons";
 import { useNavigate } from "react-router-dom";
-import { setOrders } from '../redux/actions/OrderActions';
+import { setOrders } from "../redux/actions/OrderActions";
 import TabBarComponent from "./Tarbar";
 import "../../src/styles/AvailabilityPage.scss";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,8 +15,8 @@ const RentalAvailability = () => {
     fetch("https://localhost:5001/api/orders")
       .then((response) => response.json())
       .then((data) => {
-      dispatch(setOrders(data));
-      console.log(data);
+        dispatch(setOrders(data));
+        console.log(data);
       })
       .catch((err) => console.error("Lỗi khi tải đơn hàng:", err));
   }, [dispatch]);
@@ -49,11 +49,7 @@ const RentalAvailability = () => {
 
   return (
     <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
-      <NavBar
-        onBack={() => navigate(-1)}
-      >
-        Rental Availability (#)
-      </NavBar>
+      <NavBar onBack={() => navigate(-1)}>Rental Availability (#)</NavBar>
 
       <div className="filter-section">
         <Button className="filter-btn" shape="rounded">
@@ -77,53 +73,51 @@ const RentalAvailability = () => {
         {orders.length === 0 ? (
           <p>Chưa có sản phẩm nào được thuê.</p>
         ) : (
-          <Space direction="vertical" block>
-            {orders.map((order) => (
-              <Card
-                key={order.orderId}
-                title={order.name}
-                style={{
-                  borderRadius: "8px",
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                  marginBottom: "10px",
-                }}
-                onClick={() => navigate(`/order/${order.orderId}`)}
-              >
-                <div className="rental-card">
-                  <img
-                    src={order.imageUrl}
-                    alt={order.name}
-                    className="rental-img"
-                  />
-                  <div className="rental-info">
-                    <p>
-                      <strong>Giá:</strong> ${order.price}
-                    </p>
-                    <p>
-                      <strong>Tình trạng:</strong> ${order.status}
-                    </p>
-                    <p>
-                      Ngày thuê:{" "}
-                      {order.rentals &&
-                      order.rentals[0] &&
-                      order.rentals[0].startDate
-                        ? new Date(
-                            order.rentals[0].startDate
-                          ).toLocaleDateString("vi-VN")
-                        : "N/A"}{" "}
-                      - Ngày trả:{" "}
-                      {order.rentals &&
-                      order.rentals[0] &&
-                      order.rentals[0].endDate
-                        ? new Date(order.rentals[0].endDate).toLocaleDateString(
-                            "vi-VN"
-                          )
-                        : "N/A"}
-                    </p>
+          <Space direction="vertical" block className="rental-list">
+            {orders
+              .filter((order) => order.status === "sẵn sàng")
+              .map((order) => (
+                <Card
+                  key={order.orderId}
+                  title={order.name}
+                  style={{
+                    borderRadius: "8px",
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                    marginBottom: "10px",
+                  }}
+                  onClick={() => navigate(`/order/${order.orderId}`)}
+                >
+                  <div className="rental-card">
+                    <img
+                      src={order.imageUrl}
+                      alt={order.name}
+                      className="rental-img"
+                    />
+                    <div className="rental-info">
+                      <p>
+                        <strong>Giá:</strong> ${order.price}
+                      </p>
+                      <p>
+                        <strong>Tình trạng:</strong> {order.status}
+                      </p>
+                      <p>
+                        Ngày thuê:{" "}
+                        {order.rentals?.[0]?.startDate
+                          ? new Date(
+                              order.rentals[0].startDate
+                            ).toLocaleDateString("vi-VN")
+                          : "N/A"}{" "}
+                        - Ngày trả:{" "}
+                        {order.rentals?.[0]?.endDate
+                          ? new Date(
+                              order.rentals[0].endDate
+                            ).toLocaleDateString("vi-VN")
+                          : "N/A"}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </Card>
-            ))}
+                </Card>
+              ))}
           </Space>
         )}
       </div>

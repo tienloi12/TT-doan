@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./layouts/LoginPage";
 import Dashboard from "./layouts/DashboardPage";
@@ -14,10 +14,17 @@ import UpdateProfile from "./layouts/UpdateProfilePage";
 import ProductList from "./layouts/ProductPage";
 import OrderDetail from "./layouts/OrderDetailPage";
 import RentPage from "./layouts/RentPage";
+import { useDispatch } from "react-redux";
+import { loadUserFromStorage } from "./redux/actions/LoginActions";
 
 
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(loadUserFromStorage());
+  }, [dispatch]);
   return (
     <Router>
       <Routes>
@@ -34,7 +41,7 @@ function App() {
         <Route path="/Users/update-profile/:username" element={<UpdateProfile />} />
         <Route path="/product" element={<ProductList />} />
         <Route path="/order/:orderId" element={<OrderDetail />} />
-        <Route path="/rent/:productId" element={<RentPage />} /> 
+        <Route path="/rent" element={<RentPage />} /> 
       </Routes>
     </Router>
   );

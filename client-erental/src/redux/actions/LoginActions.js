@@ -16,3 +16,23 @@ export const loginFailure = (error) => ({
   type: LOGIN_FAILURE,
   payload: error,
 });
+
+export const loadUserFromStorage = () => {
+  const token = localStorage.getItem("token");
+  const user = localStorage.getItem("user");
+
+  if (token && user) {
+    return {
+      type: "LOGIN_SUCCESS",
+      payload: {
+        token,
+        user: JSON.parse(user),
+      },
+    };
+  } else {
+    return {
+      type: "LOGIN_FAILURE",
+      payload: "No user in localStorage",
+    };
+  }
+};

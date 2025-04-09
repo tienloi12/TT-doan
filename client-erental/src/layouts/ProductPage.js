@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/ProductPage.scss";
 import TabBarComponent from "./Tarbar";
 import { ShoppingCartOutlined } from "@ant-design/icons";
+import { handleAddToCart } from "../components/ProductPageHandlers";
 
 const ProductList = () => {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ const ProductList = () => {
               </div>
               <Button
               className="rent-button"
-              onClick={() =>  navigate(`/rent/${product.productId}`)}
+              onClick={() => handleAddToCart({productId : product.productId ,navigate})}
             >
               <ShoppingCartOutlined className="rent-icon" />
               Thuê ngay

@@ -1,52 +1,22 @@
 import React, { useState } from "react";
 import { NavBar, Space, List, Badge, DatePicker, Popup } from "antd-mobile";
-import {
-  LeftOutline,
-  MoreOutline,
-  FilterOutline,
-  ClockCircleOutline,
-} from "antd-mobile-icons";
+import { FilterOutline, ClockCircleOutline } from "antd-mobile-icons";
 import dayjs from "dayjs";
-import "../../src/styles/NotificationPage.scss";
+import "../styles/NotificationPage.scss";
+import { useNavigate } from "react-router-dom";
+import TabBarComponent from "./Tarbar";
+import { useSelector } from "react-redux";
 
 const NotificationPage = () => {
+  const navigate = useNavigate();
+  const notifications = useSelector((state) => state.notifications.notifications);
+  console.log("notifications", notifications);
   const [filterDate, setFilterDate] = useState(dayjs("2025-12-25").toDate());
   const [showDatePicker, setShowDatePicker] = useState(false);
-
-  const notifications = [
-    {
-      action: "New",
-      message: "Mr Thanh has a new reservation.",
-      id: "123345555",
-      time: "10:08 PM",
-      date: "27 Oct 2025",
-    },
-    {
-      action: "Edit",
-      message: "Booking updated successfully.",
-      id: "173345555",
-      time: "11:15 AM",
-      date: "28 Oct 2025",
-    },
-    {
-      action: "Del",
-      message: "A booking has been canceled.",
-      id: "192345678",
-      time: "03:30 PM",
-      date: "29 Oct 2025",
-    },
-  ];
-
   return (
     <div className="notification-page">
       {/* NavBar */}
-      <NavBar
-        back={<LeftOutline />}
-        right={<MoreOutline />}
-        onBack={() => console.log("Back")}
-      >
-        Notifications
-      </NavBar>
+      <NavBar onBack={() => navigate(-1)}>Notifications</NavBar>
 
       {/* Filter Section */}
       <Space justify="between" className="filter-bar">
@@ -61,27 +31,32 @@ const NotificationPage = () => {
 
       {/* Notification List */}
       <List className="notification-list">
-        {notifications.map((notification, index) => (
-          <List.Item
-            key={index}
-            prefix={
-              <Badge content={notification.action} color="blue">
-                <div
-                  className={`action-circle action-${notification.action.toLowerCase()}`}
-                />
-              </Badge>
-            }
-            extra={
-              <Space align="center" className="time-info">
-                <ClockCircleOutline className="time-icon" />
-                {notification.time}
-              </Space>
-            }
-          >
-            {notification.message}
-            <List.Item.Brief>Id: {notification.id}</List.Item.Brief>
-          </List.Item>
-        ))}
+        {Array.isArray(notifications) && notifications.length > 0 ? (
+          notifications.map((notification, index) => (
+            <List.Item
+              key={index}
+              prefix={
+                <Badge content={notification.action} color="blue">
+                  <div
+                    className={`action-circle action-${notification.action.toLowerCase()}`}
+                  />
+                </Badge>
+              }
+              extra={
+                <Space align="center" className="time-info">
+                  <ClockCircleOutline className="time-icon" />
+                  {notification.time}
+                </Space>
+              }
+            >
+              {notification.message}
+            </List.Item>
+          ))
+        ) : (
+          <div style={{ padding: 16, textAlign: "center", color: "#999" }}>
+            No notifications found.
+          </div>
+        )}
       </List>
 
       {/* Date Picker Popup */}
@@ -99,6 +74,7 @@ const NotificationPage = () => {
           onCancel={() => setShowDatePicker(false)}
         />
       </Popup>
+      <TabBarComponent />
     </div>
   );
 };
