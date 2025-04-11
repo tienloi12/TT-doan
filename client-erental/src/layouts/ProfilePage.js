@@ -77,6 +77,12 @@ const ProfilePage = () => {
             Phone
           </List.Item>
           <List.Item
+            prefix={<PhonebookOutline className="icon" />}
+            extra={<strong>{user.room}</strong>}
+          >
+            Room
+          </List.Item>
+          <List.Item
             prefix={<CalendarOutline className="icon" />}
             extra={<strong>{user.createdAt}</strong>}
           >

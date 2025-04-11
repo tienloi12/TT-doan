@@ -18,21 +18,23 @@ export const loginFailure = (error) => ({
 });
 
 export const loadUserFromStorage = () => {
-  const token = localStorage.getItem("token");
-  const user = localStorage.getItem("user");
+  return (dispatch) => {
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
 
-  if (token && user) {
-    return {
-      type: "LOGIN_SUCCESS",
-      payload: {
-        token,
-        user: JSON.parse(user),
-      },
-    };
-  } else {
-    return {
-      type: "LOGIN_FAILURE",
-      payload: "No user in localStorage",
-    };
-  }
+    if (token && user) {
+      dispatch({
+        type: "LOGIN_SUCCESS",
+        payload: {
+          token,
+          user: JSON.parse(user),
+        },
+      });
+    } else {
+      dispatch({
+        type: "LOGIN_FAILURE",
+        payload: "No user in localStorage",
+      });
+    }
+  };
 };

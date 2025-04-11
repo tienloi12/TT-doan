@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Button, Card, DatePicker } from "antd-mobile";
+import { useNavigate } from "react-router-dom";
+import { Button, Card, DatePicker, NavBar, Toast } from "antd-mobile";
 import { CalendarOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { handleRent } from "../components/RentHandlers";
 import "../styles/RentPage.scss";
@@ -11,13 +11,13 @@ import { handleRemoveFromCart } from "../components/ProductPageHandlers";
 const RentPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [products, setProducts] = useState(null);
   const rentItems = useSelector((state) => state.rentalStatus.rentItems);
   const user = useSelector((state) => state.login.user);
   const today = new Date();
   const [startDate] = useState(today); // Set ngày bắt đầu là hôm nay, không cần chỉnh sửa nữa
   const [endDate, setEndDate] = useState(null);
-  const [quantity, setQuantity] = useState(1); // Initialize quantity with a default value of 1
+  const [products, setProducts] = useState([]);
+  const [quantity] = useState(1); // Initialize quantity with a default value of 1
   const [totalPrice, setTotalPrice] = useState(0);
   const [quantityMap, setQuantityMap] = useState({});
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -28,7 +28,7 @@ const RentPage = () => {
     setShowDatePicker(false);
   };
   useEffect(() => {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const cart = JSON.parse(localStorage.getItem("rentItems")) || [];
     dispatch(setRentItems(cart));
   }, [dispatch]);
 
@@ -38,20 +38,22 @@ const RentPage = () => {
     } else {
       console.log("Giỏ hàng còn lại:", rentItems);
     }
-  }, [rentItems]); 
+  }, [rentItems]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const fetched = await Promise.all(
-          rentItems.map(item =>
-            fetch(`https://localhost:5001/api/products/${item.productId}`).then(res => res.json())
+          rentItems.map((item) =>
+            fetch(`https://localhost:5001/api/products/${item.productId}`).then(
+              (res) => res.json()
+            )
           )
         );
         setProducts(fetched);
-  
+
         const initialQuantities = {};
-        rentItems.forEach(item => {
+        rentItems.forEach((item) => {
           initialQuantities[item.productId] = item.quantity || 1;
         });
         setQuantityMap(initialQuantities);
@@ -59,19 +61,26 @@ const RentPage = () => {
         console.error("Lỗi khi tải sản phẩm:", err);
       }
     };
-  
-    if (rentItems.length > 0) {
+    if (Array.isArray(rentItems) && rentItems.length > 0) {
       fetchProducts();
+    } else {
+      setProducts([]);
     }
   }, [rentItems]);
 
-
   useEffect(() => {
-    if (products && endDate) {
+    if (products && startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+
+      // Kiểm tra start và end hợp lệ
+      if (isNaN(start) || isNaN(end)) return;
+
       const days = Math.max(
         1,
-        (new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24)
+        Math.ceil((end - start) / (1000 * 60 * 60 * 24))
       );
+
       let total = 0;
       products.forEach((product) => {
         const quantity = quantityMap[product.productId] || 1;
@@ -79,59 +88,90 @@ const RentPage = () => {
       });
       setTotalPrice(total);
     }
-  }, [products, endDate, quantityMap]);
+  }, [products, startDate, endDate, quantityMap]);
 
- if (!products || products.length === 0) {
-    return <p>Rental cart is empty</p>;
-  }
+
+  useEffect(() => {
+    const updatedCart = rentItems.map((item) => ({
+      ...item,
+      quantity: quantityMap[item.productId] || 1,
+    }));
+    localStorage.setItem("rentItems", JSON.stringify(updatedCart));
+  }, [quantityMap]);
+  
   return (
     <div className="rent-container">
-      {products.map((product, index) => (
-      <Card key={product.productId} className="rent-card horizontal-card">
-      <div className="card-content">
-        <img src={product.imageUrl} alt={product.name} className="rent-image" />
-        <div className="card-details">
-          <h2>{product.name}</h2>
-          <p>{product.description}</p>
-          <p><strong>Giá thuê:</strong> ${product.price} / ngày</p>
+      <NavBar onBack={() => navigate("/product")}>Rental cart</NavBar>
+      {products.length > 0 ? (
+        products.map((product) => (
+          <Card key={product.productId} className="rent-card horizontal-card">
+            <div className="card-content">
+              <img
+                src={product.imageUrl}
+                alt={product.name}
+                className="rent-image"
+              />
+              <div className="card-details">
+                <h2>{product.name}</h2>
+                <p>{product.description}</p>
+                <p>
+                  <strong>Giá thuê:</strong> ${product.price} / ngày
+                </p>
 
-          <div className="quantity-control">
-            <Button
-              shape="rounded"
-              size="mini"
-              onClick={() =>
-                setQuantityMap(prev => ({
-                  ...prev,
-                  [product.productId]: Math.max(1, (prev[product.productId] || 1) - 1)
-                }))
-              }
-            >-</Button>
+                <div className="quantity-control">
+                  <Button
+                    shape="rounded"
+                    size="mini"
+                    onClick={() =>
+                      setQuantityMap((prev) => ({
+                        ...prev,
+                        [product.productId]: Math.max(
+                          1,
+                          (prev[product.productId] || 1) - 1
+                        ),
+                      }))
+                    }
+                  >
+                    -
+                  </Button>
 
-            <span>{quantityMap[product.productId] || 1}</span>
-            <Button
-              shape="rounded"
-              size="mini"
-              onClick={() =>
-                setQuantityMap(prev => ({
-                  ...prev,
-                  [product.productId]: (prev[product.productId] || 1) + 1
-                }))
-              }
-            >+</Button>
-          </div>
+                  <span>{quantityMap[product.productId] || 1}</span>
 
-          <Button
-            color="danger"
-            fill="outline"
-            size="mini"
-            onClick={() => handleRemoveFromCart(product.productId, dispatch, setRentItems)}
-          >
-            Xóa khỏi giỏ
-          </Button>
-        </div>
-      </div>
-    </Card>
-      ))}
+                  <Button
+                    shape="rounded"
+                    size="mini"
+                    onClick={() =>
+                      setQuantityMap((prev) => ({
+                        ...prev,
+                        [product.productId]: (prev[product.productId] || 1) + 1,
+                      }))
+                    }
+                  >
+                    +
+                  </Button>
+                </div>
+
+                <Button
+                  color="danger"
+                  fill="outline"
+                  size="mini"
+                  onClick={() =>
+                    handleRemoveFromCart(
+                      product.productId,
+                      dispatch,
+                      setRentItems
+                    )
+                  }
+                >
+                  Xóa khỏi giỏ
+                </Button>
+              </div>
+            </div>
+          </Card>
+        ))
+      ) : (
+        <div className="empty-cart-message">Giỏ hàng trống</div>
+      )}
       <div className="date-picker-group">
         <div>Ngày bắt đầu: {startDate.toLocaleDateString()}</div>
         <Button onClick={() => setShowDatePicker(true)}>
@@ -156,7 +196,32 @@ const RentPage = () => {
       <p>
         <strong>Tổng tiền:</strong> ${totalPrice}
       </p>
+      <Button
+        className="rent-button"
+        color="primary"
+        onClick={() => {
+          if (products.length === 0) {
+            Toast.show({ content: "Vui lòng chọn sản phẩm", duration: 2000 });
+            return;
+          }
+          if (!endDate) {
+            Toast.show({ content: "Vui lòng chọn ngày thuê!", duration: 2000 });
+            return;
+          }
 
+          navigate("/payment", {
+            state: {
+              totalPrice,
+              products,
+              startDate,
+              endDate,
+              quantityMap,
+            },
+          }); // Điều hướng đến trang PaymentPage
+        }}
+      >
+        Tiến hành thanh toán
+      </Button>
       <Button
         className="rent-button"
         onClick={() =>
@@ -168,6 +233,8 @@ const RentPage = () => {
             navigate,
             quantity,
             dispatch,
+            totalPrice,
+            quantityMap,
           })
         }
       >

@@ -54,6 +54,7 @@ public IActionResult Login([FromBody] Login model)
                 email = user.Email,
                 phone = user.Phone,
                 role = user.Role,
+                room = user.Room,
                 createdAt = user.CreatedAt
             }});
     }

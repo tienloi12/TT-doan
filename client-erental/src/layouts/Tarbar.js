@@ -14,6 +14,7 @@ import {
 } from "antd-mobile-icons";
 import "../styles/Tarbar.scss";
 import { useSelector } from "react-redux";
+import { ShoppingCartOutlined } from "@ant-design/icons";
 
 const TabBarComponent = () => {
   const navigate = useNavigate();
@@ -93,6 +94,12 @@ const TabBarComponent = () => {
             onClick={() => navigate("/product")}
           >
             Products
+          </List.Item>
+          <List.Item
+            prefix={<ShoppingCartOutlined />}
+            onClick={() => navigate("/rent")}
+          >
+            Rental Cart
           </List.Item>
           {/* Logout Option */}
           <List.Item

@@ -2,7 +2,8 @@ import { createStore, applyMiddleware, combineReducers, compose } from "redux";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { thunk } from "redux-thunk";  
-import  loginReducer  from "../../redux/reducers/LoginReducer";
+
+import loginReducer from "../reducers/LoginReducer"; // Import reducer gốc
 import registerReducer from "../reducers/RegisterReducer";
 import profileReducer from "../reducers/ProfileReducer";
 import { productReducer } from "../reducers/ProductReducer";
@@ -10,14 +11,18 @@ import orderReducer from "../reducers/OrderReducer";
 import notificationReducer from "../reducers/NotificationReducer";
 import rentalReducer from "../reducers/RentalReducer";
 
-const persistConfig = {
-  key: "root",
+// 🔥 Tạo cấu hình persist riêng cho login
+const loginPersistConfig = {
+  key: "login",
   storage,
-  whitelist: ["user"],
+  whitelist: ["user", "token"],
 };
 
+// ✅ Bọc login reducer sau khi loginReducer đã import xong
+const persistedLoginReducer = persistReducer(loginPersistConfig, loginReducer);
+
 const rootReducer = combineReducers({
-  login: loginReducer,
+  login: persistedLoginReducer, // login đã được persist
   register: registerReducer,
   profile: profileReducer,
   product: productReducer,
@@ -25,12 +30,11 @@ const rootReducer = combineReducers({
   notifications: notificationReducer,
   rentalStatus: rentalReducer,
 });
-const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
-  persistedReducer,
+  rootReducer,
   composeEnhancers(applyMiddleware(thunk))
 );
 

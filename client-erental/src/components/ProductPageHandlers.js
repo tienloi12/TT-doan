@@ -1,26 +1,26 @@
 
 
 export const handleAddToCart = async ({productId, navigate}) => {
-    const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+    const existingCart = JSON.parse(localStorage.getItem("rentItems")) || [];
     if (!existingCart.find(item => item.productId === productId)) {
       existingCart.push({ productId, quantity: 1 });
-      localStorage.setItem("cart", JSON.stringify(existingCart));
+      localStorage.setItem("rentItems", JSON.stringify(existingCart));
     }
     navigate("/rent"); // điều hướng đến trang giỏ hàng
   };
   export const handleRemoveFromCart = (productId, dispatch, setRentItems) => {
-    const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
+    const currentCart = JSON.parse(localStorage.getItem("rentItems")) || [];
     
     // Lọc bỏ sản phẩm cần xóa
     const updatedCart = currentCart.filter(item => item.productId !== productId);
   
     // Kiểm tra nếu giỏ hàng trống, tránh lỗi trong Redux
     if (updatedCart.length === 0) {
-      // Giỏ hàng trống, có thể thêm một thông báo hoặc logic khác nếu cần
+      dispatch(setRentItems([])); 
     }
   
     // Cập nhật lại localStorage với giỏ hàng đã xóa
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    localStorage.setItem("rentItems", JSON.stringify(updatedCart));
   
     dispatch(setRentItems(updatedCart));
   };

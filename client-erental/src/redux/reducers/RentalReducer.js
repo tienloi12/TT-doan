@@ -2,21 +2,22 @@ import { SET_RENTAL_STATUS } from "../actions/RentalActions";
 
 const initialState = {
   rentalStatus: [],
-  rentItems : [],
+  rentItems: JSON.parse(localStorage.getItem("rentItems")) || [],
 };
 
 const rentalReducer = (state = initialState, action) => {
+  
   switch (action.type) {
     case SET_RENTAL_STATUS:
       return {
         ...state,
         rentalStatus: action.payload,
       };
-      case "SET_RENT_ITEMS":
-        return {
-          ...state,
-          rentItems: action.payload,
-        };
+    case "SET_RENT_ITEMS":
+      return {
+        ...state,
+        rentItems: action.payload,
+      };
     case "ADD_TO_CART":
       const existingItem = state.rentItems.find(
         (i) => i.productId === action.payload.productId
@@ -47,7 +48,12 @@ const rentalReducer = (state = initialState, action) => {
         ...state,
         rentItems: filteredItems,
       };
-
+    case "CLEAR_CART":
+      localStorage.removeItem("rentItems");
+      return {
+        ...state,
+        rentItems: [],
+      };
     default:
       return state;
   }

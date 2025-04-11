@@ -1,8 +1,15 @@
 import { Toast } from "antd-mobile";
 import dayjs from "dayjs";
 import { addNotification } from "../redux/actions/NotificationActions";
+import { clearCart } from "../redux/actions/RentalActions";
 
-export const handleRent = async ({ userId, product, startDate, endDate, navigate,quantity, dispatch }) => {
+export const handleRent = async ({ totalPrice,userId, products, startDate, endDate, navigate,quantity,quantityMap, dispatch }) => {
+  console.log("san phẩm", products);
+
+  if(products.length === 0) {
+    Toast.show({ content: "Vui lòng chọn sản phẩm", duration: 2000 });
+    return;
+  }
   if (!startDate || !endDate) {
     Toast.show({ content: "Vui lòng chọn ngày thuê!", duration: 2000 });
     return;
@@ -17,17 +24,14 @@ export const handleRent = async ({ userId, product, startDate, endDate, navigate
     Toast.show({ content: "Ngày kết thúc phải sau ngày bắt đầu!", duration: 2000 });
     return;
   }
-
-  const totalPrice = days * product.price;
-
+  const orderProducts = products.map((product) => ({
+    productId: product.productId,
+    quantity: quantityMap[product.productId] || 1,
+  }));
   const orderData = {
     createdAt: new Date().toISOString(),
-    orderProducts: [
-      {
-        productId: product.productId,
-        quantity: quantity
-      }
-    ]
+    userId: userId,
+    orderProducts,
   };
 console.log("Order data:", orderData);
   try {
@@ -60,10 +64,10 @@ console.log("Order data:", orderData);
 
     if (!rentalRes.ok) throw new Error("Không thể tạo rental!");
     console.log("Rental đã tạo:", rentalData);
-
+    dispatch(clearCart());
     const newNotification = {
       action: "New",
-      message: `Bạn đã thuê thành công ${product.name}.`,
+      message: `Bạn đã thuê thành công`,
       id: new Date().getTime().toString(),
       time: dayjs().format("hh:mm A"),
       date: dayjs().format("DD MMM YYYY"),
@@ -74,7 +78,7 @@ console.log("Order data:", orderData);
     console.log("Đã thêm thông báo:", newNotification);
 
     Toast.show({ content: "Thuê thành công!", duration: 2000 });
-    navigate("/availability");
+    navigate("/dashboard"); // Chuyển hướng về trang dashboard sau khi thuê thành công
 
   } catch (error) {
     console.error("Lỗi khi thuê sản phẩm:", error);

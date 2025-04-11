@@ -21,6 +21,7 @@ namespace server_eRental.Models
         public string PasswordHash { get; set; }
         public string Phone { get; set; }
         public string Role { get; set; }
+        public string? Room { get; set; }
         public DateTime? CreatedAt { get; set; }
         public string ResetToken { get; set; }
         public DateTime? ResetTokenExpiry { get; set; }

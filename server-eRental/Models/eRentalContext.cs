@@ -49,6 +49,9 @@ namespace server_eRental.Models
                     .HasColumnType("datetime")
                     .HasColumnName("created_at");
             });
+           modelBuilder.Entity<Order>()
+    .Property(o => o.UserId)
+    .HasColumnName("user_id");
 
             modelBuilder.Entity<OrderProduct>(entity =>
             {
@@ -185,7 +188,8 @@ namespace server_eRental.Models
                 entity.HasOne(d => d.Customer)
                     .WithMany(p => p.Rentals)
                     .HasForeignKey(d => d.CustomerId)
-                    .HasConstraintName("FK__Rentals__custome__5535A963");
+                    .HasConstraintName("FK__Rentals__custome__5535A963")
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.Rentals)

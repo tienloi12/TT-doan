@@ -16,9 +16,10 @@ namespace server_eRental.Models
         }
 
         public int OrderId { get; set; }
+        public int UserId { get; set; }        
         public DateTime? CreatedAt { get; set; }
 
-        public virtual User Owner { get; set; }
+        public virtual User Users { get; set; }
         public virtual ICollection<Rental> Rentals { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
         public virtual ICollection<Wishlist> Wishlists { get; set; }

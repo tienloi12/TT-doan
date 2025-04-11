@@ -89,6 +89,7 @@ namespace server_eRental.Controllers
                 Phone = model.Phone,
                 PasswordHash = model.PasswordHash, 
                 Role = "Customer",
+                Room = model.Room,
                 CreatedAt = DateTime.UtcNow
                 };
 
@@ -175,6 +176,7 @@ public async Task<IActionResult> GetUserProfile(int userId)
             u.Email,
             u.Phone,
             u.Role,
+            u.Room,
             u.CreatedAt
         })
         .FirstOrDefaultAsync();

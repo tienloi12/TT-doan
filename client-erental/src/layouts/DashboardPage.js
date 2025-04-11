@@ -23,7 +23,7 @@ const Dashboard = () => {
   const rentalStatus = useSelector((state) => state.rentalStatus.rentalStatus);
   const dispatch = useDispatch();
   useEffect(() => {
-    fetch("https://localhost:5001/api/orders/status-summary")
+    fetch("https://localhost:5001/api/rentals/status-summary")
       .then((res) => res.json())
       .then((data) => {
         const statusWithColors = data.map((item) => ({
@@ -72,17 +72,18 @@ const Dashboard = () => {
   ];
   const CustomLegend = ({ payload }) => (
     <div className="custom-legend">
-      {payload.map((entry, index) => (
-        <div key={`legend-${index}`} className="legend-item">
-          <div
-            className="legend-color"
-            style={{ backgroundColor: entry.color }}
-          ></div>
-          <span>
-            {entry.value} - {entry.name}
-          </span>
-        </div>
-      ))}
+      {Array.isArray(payload) &&
+        payload.map((entry, index) => (
+          <div key={`legend-${index}`} className="legend-item">
+            <div
+              className="legend-color"
+              style={{ backgroundColor: entry.color }}
+            ></div>
+            <span>
+              {entry.value} - {entry.name}
+            </span>
+          </div>
+        ))}
     </div>
   );
   return (
@@ -163,7 +164,7 @@ const Dashboard = () => {
                 outerRadius={70}
                 label
               >
-                {rentalStatus.map((entry, index) => (
+                {(rentalStatus || []).map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>

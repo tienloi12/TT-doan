@@ -22,7 +22,7 @@ namespace server_eRental.Controllers
         public async Task<IActionResult> GetAllOrders()
         {
             var orders = await _context.Orders
-                .Include(o => o.Owner) // Lấy thông tin khách hàng
+                .Include(o => o.UserId) // Lấy thông tin khách hàng
                 .Include(o => o.Rentals) // Lấy thông tin thuê
                 .Select(o => new
                 {
@@ -89,33 +89,42 @@ namespace server_eRental.Controllers
             return Ok(order);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateOrder([FromBody] Order order)
+       [HttpPost]
+public async Task<IActionResult> CreateOrder([FromBody] Order order)
+{
+    if (order == null)
+    {
+        return BadRequest("Invalid data.");
+    }
+
+    order.CreatedAt = DateTime.UtcNow;
+
+    if (order.Rentals != null)
+    {
+        foreach (var rental in order.Rentals)
         {
-            if (order == null)
-            {
-                return BadRequest("Invalid data.");
-            }
-            foreach (var rental in order.Rentals)
-            {
-                rental.CreatedAt = DateTime.UtcNow;
-                rental.Status = "Pending";
-            }
-
-            order.CreatedAt = DateTime.UtcNow;
-
-            await _context.Orders.AddAsync(order);
-
-            try
-            {
-
-                await _context.SaveChangesAsync();
-                return Ok(order); 
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            rental.CreatedAt = DateTime.UtcNow;
+            rental.Status = "Pending";
         }
+    }
+
+    try
+    {
+        await _context.Orders.AddAsync(order);
+        await _context.SaveChangesAsync();
+
+        // Load lại Rentals nếu cần trả về cho client
+        await _context.Entry(order)
+                      .Collection(o => o.Rentals)
+                      .LoadAsync();
+
+        return Ok(order); // hoặc Ok(new { orderId = order.OrderId });
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, $"Internal server error: {ex.Message}");
+    }
+}
+
     }
 }

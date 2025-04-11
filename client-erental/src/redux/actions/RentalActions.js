@@ -1,6 +1,7 @@
 export const SET_RENTAL_STATUS = "SET_RENTAL_STATUS";
 export const ADD_TO_CART = "ADD_TO_CART";
 export const REMOVE_FROM_CART = "REMOVE_FROM_CART";
+export const CLEAR_CART = "CLEAR_CART";
 
 // Action để set trạng thái thuê (nếu có dùng trong tương lai)
 export const setRentalStatus = (status) => ({
@@ -21,4 +22,7 @@ export const addToCart = ({ productId, quantity, startDate, endDate }) => ({
 export const removeFromCart = (productId) => ({
   type: REMOVE_FROM_CART,
   payload: productId,
+});
+export const clearCart = () => ({
+  type: CLEAR_CART
 });
