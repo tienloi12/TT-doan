@@ -78,7 +78,7 @@ console.log("Order data:", orderData);
     console.log("Đã thêm thông báo:", newNotification);
 
     Toast.show({ content: "Thuê thành công!", duration: 2000 });
-    navigate("/dashboard"); // Chuyển hướng về trang dashboard sau khi thuê thành công
+    navigate("/dashboard");
 
   } catch (error) {
     console.error("Lỗi khi thuê sản phẩm:", error);

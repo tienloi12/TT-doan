@@ -28,6 +28,7 @@ namespace server_eRental.Models
         public virtual DbSet<Voucher> Vouchers { get; set; }
         public virtual DbSet<Wishlist> Wishlists { get; set; }
         public virtual DbSet<Login> Logins { get; set; }
+        public virtual DbSet<ProductStatus> ProductStatuses { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -41,6 +42,19 @@ namespace server_eRental.Models
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
+            {
+   modelBuilder.Entity<Product>()
+        .HasOne(p => p.ProductStatus)
+        .WithMany(s => s.Products)
+        .HasForeignKey(p => p.StatusCode)
+        .HasPrincipalKey(s => s.StatusCode); // Chỉ rõ khóa chính
+        modelBuilder.Entity<ProductStatus>()
+        .Property(ps => ps.StatusCode)
+        .HasColumnName("status_code"); 
+                 modelBuilder.Entity<ProductStatus>()
+        .Property(ps => ps.StatusName)
+        .HasColumnName("status_name");  // Cột trong cơ sở dữ liệu là 'status_code'
+}
             modelBuilder.Entity<Order>(entity =>
             {
                 entity.Property(e => e.OrderId).HasColumnName("order_id");
@@ -123,36 +137,44 @@ namespace server_eRental.Models
                     .HasConstraintName("FK__Payments__vouche__74AE54BC");
             });
 
-            modelBuilder.Entity<Product>(entity =>
-            {
-                entity.Property(e => e.ProductId).HasColumnName("product_id");
+          modelBuilder.Entity<Product>(entity =>
+{
+    entity.Property(e => e.ProductId).HasColumnName("product_id");
 
-                entity.Property(e => e.Category)
-                    .HasMaxLength(100)
-                    .HasColumnName("category");
+    entity.Property(e => e.Category)
+        .HasMaxLength(100)
+        .HasColumnName("category");
 
-                entity.Property(e => e.CreatedAt)
-                    .HasColumnType("datetime")
-                    .HasColumnName("created_at")
-                    .HasDefaultValueSql("(getdate())");
+    entity.Property(e => e.CreatedAt)
+        .HasColumnType("datetime")
+        .HasColumnName("created_at")
+        .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.Description)
-                    .HasColumnType("text")
-                    .HasColumnName("description");
+    entity.Property(e => e.Description)
+        .HasColumnType("text")
+        .HasColumnName("description");
 
-                entity.Property(e => e.ImageUrl)
-                    .HasMaxLength(255)
-                    .HasColumnName("image_url");
+    entity.Property(e => e.ImageUrl)
+        .HasMaxLength(255)
+        .HasColumnName("image_url");
 
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(255)
-                    .HasColumnName("name");
+    entity.Property(e => e.Name)
+        .IsRequired()
+        .HasMaxLength(255)
+        .HasColumnName("name");
 
-                entity.Property(e => e.Price)
-                    .HasColumnType("decimal(10, 2)")
-                    .HasColumnName("price");
-            });
+    entity.Property(e => e.Price)
+        .HasColumnType("decimal(10, 2)")
+        .HasColumnName("price");
+
+    // Đảm bảo ánh xạ cho StatusCode
+    entity.Property(e => e.StatusCode)
+        .HasMaxLength(50)  // Đảm bảo chỉ định độ dài nếu là chuỗi
+        .HasColumnName("status_code");
+});
+
+
+   
 
             modelBuilder.Entity<Rental>(entity =>
             {

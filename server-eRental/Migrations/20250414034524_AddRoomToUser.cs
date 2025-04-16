@@ -32,6 +32,8 @@ namespace server_eRental.Migrations
                     category = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     price = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     image_url = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())")
                 },
                 constraints: table =>

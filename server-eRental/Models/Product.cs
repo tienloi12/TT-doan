@@ -20,10 +20,14 @@ namespace server_eRental.Models
         public string Category { get; set; }
         public decimal Price { get; set; }
         public string ImageUrl { get; set; }
+        public string StatusCode { get; set; } 
+        public int Quantity { get; set; }
         public DateTime? CreatedAt { get; set; }
 
         public virtual ICollection<OrderProduct> OrderProducts { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
         public virtual ICollection<Wishlist> Wishlists { get; set; }
+         public virtual ProductStatus ProductStatus { get; set; }
+        public string Status => ProductStatus?.StatusCode;
     }
 }

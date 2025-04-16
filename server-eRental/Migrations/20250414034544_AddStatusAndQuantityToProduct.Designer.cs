@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using server_eRental.Models;
 
 namespace server_eRental.Migrations
 {
     [DbContext(typeof(eRentalContext))]
-    partial class eRentalContextModelSnapshot : ModelSnapshot
+    [Migration("20250414034544_AddStatusAndQuantityToProduct")]
+    partial class AddStatusAndQuantityToProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,36 +187,15 @@ namespace server_eRental.Migrations
                         .HasColumnType("decimal(10,2)")
                         .HasColumnName("price");
 
-                    b.Property<string>("ProductStatusStatusCode")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<string>("StatusCode")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("status_code");
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProductId");
 
-                    b.HasIndex("ProductStatusStatusCode");
-
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("server_eRental.Models.ProductStatus", b =>
-                {
-                    b.Property<string>("StatusCode")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("status_code");
-
-                    b.Property<string>("StatusName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("StatusCode");
-
-                    b.ToTable("ProductStatuses");
                 });
 
             modelBuilder.Entity("server_eRental.Models.Rental", b =>
@@ -556,15 +537,6 @@ namespace server_eRental.Migrations
                     b.Navigation("Voucher");
                 });
 
-            modelBuilder.Entity("server_eRental.Models.Product", b =>
-                {
-                    b.HasOne("server_eRental.Models.ProductStatus", "ProductStatus")
-                        .WithMany("Products")
-                        .HasForeignKey("ProductStatusStatusCode");
-
-                    b.Navigation("ProductStatus");
-                });
-
             modelBuilder.Entity("server_eRental.Models.Rental", b =>
                 {
                     b.HasOne("server_eRental.Models.User", "Customer")
@@ -671,11 +643,6 @@ namespace server_eRental.Migrations
                     b.Navigation("Reviews");
 
                     b.Navigation("Wishlists");
-                });
-
-            modelBuilder.Entity("server_eRental.Models.ProductStatus", b =>
-                {
-                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("server_eRental.Models.Rental", b =>

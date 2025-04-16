@@ -49,5 +49,44 @@ namespace eRental.Controllers
 
             return Ok(product);
         }
+
+ [HttpGet("status-summary")]
+public IActionResult GetProductStatusSummary()
+{
+    // Lấy tất cả trạng thái sản phẩm và sản phẩm
+    var productStatuses = _context.ProductStatuses.ToList();
+    var products = _context.Products.ToList();
+
+    // Kiểm tra nếu không có dữ liệu trong bảng ProductStatuses
+    if (!productStatuses.Any())
+    {
+        return NotFound(new { message = "Không tìm thấy trạng thái sản phẩm." });
+    }
+
+    // Tạo kết quả nhóm theo trạng thái sản phẩm
+    var result = products
+        .GroupBy(p => p.Status)  // Giả sử p.Status là khóa ngoại liên kết với bảng ProductStatuses
+        .Select(g =>
+        {
+            // Kiểm tra và lấy tên trạng thái đúng
+            var status = productStatuses
+                .FirstOrDefault(ps => ps.StatusCode == g.Key);
+
+            var statusName = status?.StatusName ?? "Unknown";  // Sử dụng đúng tên cột StatusCode
+
+            return new
+            {
+                name = statusName,
+                value = g.Count(),
+            };
+        })
+        .ToList();
+
+    return Ok(result);
+}
+
+
+
+
     }
 }

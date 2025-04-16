@@ -117,6 +117,7 @@ const RentPage = () => {
                 <p>
                   <strong>Giá thuê:</strong> ${product.price} / ngày
                 </p>
+                <p>{product.quantity}</p>
 
                 <div className="quantity-control">
                   <Button

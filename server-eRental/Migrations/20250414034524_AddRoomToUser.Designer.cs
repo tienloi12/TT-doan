@@ -10,7 +10,7 @@ using server_eRental.Models;
 namespace server_eRental.Migrations
 {
     [DbContext(typeof(eRentalContext))]
-    [Migration("20250411082815_AddRoomToUser")]
+    [Migration("20250414034524_AddRoomToUser")]
     partial class AddRoomToUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -186,6 +186,12 @@ namespace server_eRental.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(10,2)")
                         .HasColumnName("price");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProductId");
 

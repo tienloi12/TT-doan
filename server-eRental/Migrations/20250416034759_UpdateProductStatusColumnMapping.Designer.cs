@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using server_eRental.Models;
 
 namespace server_eRental.Migrations
 {
     [DbContext(typeof(eRentalContext))]
-    partial class eRentalContextModelSnapshot : ModelSnapshot
+    [Migration("20250416034759_UpdateProductStatusColumnMapping")]
+    partial class UpdateProductStatusColumnMapping
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

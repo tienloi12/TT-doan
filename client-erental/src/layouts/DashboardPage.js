@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { NavBar, Button, Divider } from "antd-mobile";
 import { useNavigate } from "react-router-dom";
 import {
@@ -22,54 +22,66 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const rentalStatus = useSelector((state) => state.rentalStatus.rentalStatus);
   const dispatch = useDispatch();
-  useEffect(() => {
-    fetch("https://localhost:5001/api/rentals/status-summary")
-      .then((res) => res.json())
-      .then((data) => {
-        const statusWithColors = data.map((item) => ({
-          ...item,
-          color: getColorForStatus(item.name), // gán màu
-        }));
-        dispatch(setRentalStatus(statusWithColors));
-      })
-      .catch((err) => console.error("Lỗi load trạng thái:", err));
-  }, []);
-
+  const [revenueData, setRevenueData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const fixSpecialCharacters = (str) => {
+    return str.replace("Ð", "Đ");
+  };
   const getColorForStatus = (status) => {
-    switch (status.toLowerCase()) {
-      case "sẵn sàng":
+    const fixedStatus = fixSpecialCharacters(status);
+    switch (fixedStatus.toLowerCase()) {
+      case "đồ sẵn sàng":
         return "#1890ff";
-      case "đang thuê":
-        return "#1459ff";
-      case "đồ bán":
+      case "đồ bẩn":
         return "#f5222d";
-      case "cần giặt":
+      case "đồ cần giặt":
         return "#faad14";
       case "đồ hỏng":
         return "#a0d911";
-      case "đang sửa":
+      case "đồ đang sửa":
         return "#13c2c2";
-      case "ưu tiên":
+      case "đồ ưu tiên":
         return "#722ed1";
       default:
         return "#ccc";
     }
   };
+  useEffect(() => {
+    fetch("https://localhost:5001/api/products/status-summary")
+      .then((res) => res.json())
+      .then((data) => {
+        const statusWithColors = data.map((item) => {
+          console.log("Tên trạng thái:", item.name);
+          return {
+            ...item,
+            color: getColorForStatus(item.name),
+          };
+        });
+        console.log("Trạng thái có màu:", statusWithColors);
+        dispatch(setRentalStatus(statusWithColors));
+      })
+      .catch((err) => console.error("Lỗi load trạng thái:", err));
+  }, []);
 
-  const revenueData = [
-    { month: "Jan", value: 12000 },
-    { month: "Feb", value: 15000 },
-    { month: "Mar", value: 17000 },
-    { month: "Apr", value: 14000 },
-    { month: "May", value: 18000 },
-    { month: "Jun", value: 21000 },
-    { month: "Jul", value: 25000 },
-    { month: "Aug", value: 23000 },
-    // { month: "Sep", value: 26000 },
-    // { month: "Oct", value: 28000 },
-    // { month: "Nov", value: 30000 },
-    // { month: "Dec", value: 32000 },
-  ];
+  useEffect(() => {
+    fetch("https://localhost:5001/api/rentals/monthly-revenue?year=2025")
+      .then((res) => res.json())
+      .then((data) => {
+        const monthNames = [
+          "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+  
+        const revenueData = data.map((item) => ({
+          month: monthNames[item.month - 1],
+          value: item.totalRevenue
+        }));
+  
+        setRevenueData(revenueData); // Dùng cho biểu đồ
+      })
+      .catch((err) => console.error("Lỗi load doanh thu theo tháng:", err));
+  }, []);
+
   const CustomLegend = ({ payload }) => (
     <div className="custom-legend">
       {Array.isArray(payload) &&
@@ -129,7 +141,7 @@ const Dashboard = () => {
           Total Revenue <span className="increase">+31.9%</span>
         </h3>
         <div className="chart-wrapper">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height={300}>
             <LineChart data={revenueData}>
               <XAxis
                 dataKey="month"

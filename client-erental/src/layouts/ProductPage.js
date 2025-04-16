@@ -62,6 +62,7 @@ const ProductList = () => {
                 <h3>{product.name}</h3>
                 <p>{product.price.toLocaleString()} VND</p>
               </div>
+              <p>Số lượng : {product.quantity}</p>
               <Button
               className="rent-button"
               onClick={() => handleAddToCart({productId : product.productId ,navigate})}

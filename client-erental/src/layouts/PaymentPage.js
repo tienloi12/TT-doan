@@ -1,22 +1,18 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Card, Button, NavBar, Divider, Toast } from "antd-mobile";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { CheckCircleOutline } from "antd-mobile-icons";
 import "../styles/PaymentPage.scss";
+import { handlePayment } from "../components/PaymentPageHandlers";
 
 const PaymentPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation();
   const { totalPrice, products, startDate, endDate, quantityMap } = location.state || {};
   const user = useSelector((state) => state.login.user);
  
- 
-
-  const handlePayment = () => {
-    Toast.show({ content: "Thanh toán thành công!", icon: "success" });
-    navigate("/rent");
-  };
 
   return (
     <div className="payment-container">
@@ -53,7 +49,19 @@ const PaymentPage = () => {
         size="large"
         icon={<CheckCircleOutline />}
         className="confirm-button"
-        onClick={handlePayment}
+        onClick={() =>
+          handlePayment({
+                    userId: user.user.userId,
+                    products,
+                    startDate,
+                    endDate,
+                    navigate,
+                    quantityMap,
+                    dispatch,
+                    totalPrice,
+                    quantityMap,
+                  })
+                }
       >
         Xác nhận thanh toán
       </Button>

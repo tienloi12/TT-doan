@@ -18,20 +18,7 @@ namespace server_eRental.Controllers
         {
             _context = context;
         }
-        [HttpGet("status-summary")]
-        public IActionResult GetOrderStatusSummary()
-        {
-            var statusSummary = _context.Rentals
-                .GroupBy(o => o.Status)
-                .Select(g => new
-                {
-                    name = g.Key,
-                    value = g.Count()
-                })
-                .ToList();
-
-            return Ok(statusSummary);
-        }
+      
         [HttpPost]
         public async Task<IActionResult> CreateRental([FromBody] Rental rental)
         {
@@ -63,6 +50,63 @@ namespace server_eRental.Controllers
             }
 
         }
+        [HttpGet("monthly-revenue")]
+        public async Task<IActionResult> GetMonthlyRevenue([FromQuery] int year)
+{
+    try
+    {
+        var rentals = await _context.Rentals
+            .Where(r => r.EndDate.Year == year)
+            .ToListAsync();
+
+        var monthlyRevenue = rentals
+            .GroupBy(r => r.EndDate.Month)
+            .Select(g => new
+            {
+                Month = g.Key,
+                TotalRevenue = g.Sum(r => r.TotalPrice)
+            })
+            .OrderBy(r => r.Month)
+            .ToList();
+
+        var result = Enumerable.Range(1, 12).Select(month => new
+        {
+            Month = month,
+            TotalRevenue = monthlyRevenue.FirstOrDefault(r => r.Month == month)?.TotalRevenue ?? 0
+        });
+
+        return Ok(result);
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, $"Lỗi server: {ex.Message}");
+    }
+}
+        [HttpPut("update-status")]
+        public async Task<IActionResult> UpdateProductStatus([FromBody] List<int> productIds)
+{
+    try
+    {
+        var products = await _context.Products
+            .Where(p => productIds.Contains(p.ProductId))
+            .ToListAsync();
+
+        if (!products.Any()) return NotFound("Không tìm thấy sản phẩm nào.");
+
+        foreach (var product in products)
+        {
+            product.StatusCode = "renting"; // hoặc mã code tương ứng từ ProductStatus
+        }
+
+        await _context.SaveChangesAsync();
+        return Ok("Cập nhật trạng thái thành công.");
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, $"Lỗi server: {ex.Message}");
+    }
+}
+
 
     }
 }

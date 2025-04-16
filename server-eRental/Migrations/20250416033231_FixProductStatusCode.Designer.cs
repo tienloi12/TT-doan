@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using server_eRental.Models;
 
 namespace server_eRental.Migrations
 {
     [DbContext(typeof(eRentalContext))]
-    partial class eRentalContextModelSnapshot : ModelSnapshot
+    [Migration("20250416033231_FixProductStatusCode")]
+    partial class FixProductStatusCode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -206,8 +208,7 @@ namespace server_eRental.Migrations
             modelBuilder.Entity("server_eRental.Models.ProductStatus", b =>
                 {
                     b.Property<string>("StatusCode")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("status_code");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("StatusName")
                         .HasColumnType("nvarchar(max)");
