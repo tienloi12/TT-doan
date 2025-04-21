@@ -17,6 +17,7 @@ import RentPage from "./layouts/RentPage";
 import { useDispatch } from "react-redux";
 import { loadUserFromStorage } from "./redux/actions/LoginActions";
 import PaymentPage from "./layouts/PaymentPage";
+import BillPage from "./layouts/BillPage";
 
 
 
@@ -44,6 +45,7 @@ function App() {
         <Route path="/order/:orderId" element={<OrderDetail />} />
         <Route path="/rent" element={<RentPage />} /> 
         <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/bill" element={<BillPage />} />
       </Routes>
     </Router>
   );

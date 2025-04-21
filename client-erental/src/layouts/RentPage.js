@@ -199,32 +199,6 @@ const RentPage = () => {
       </p>
       <Button
         className="rent-button"
-        color="primary"
-        onClick={() => {
-          if (products.length === 0) {
-            Toast.show({ content: "Vui lòng chọn sản phẩm", duration: 2000 });
-            return;
-          }
-          if (!endDate) {
-            Toast.show({ content: "Vui lòng chọn ngày thuê!", duration: 2000 });
-            return;
-          }
-
-          navigate("/payment", {
-            state: {
-              totalPrice,
-              products,
-              startDate,
-              endDate,
-              quantityMap,
-            },
-          }); // Điều hướng đến trang PaymentPage
-        }}
-      >
-        Tiến hành thanh toán
-      </Button>
-      <Button
-        className="rent-button"
         onClick={() =>
           handleRent({
             userId: user.user.userId,

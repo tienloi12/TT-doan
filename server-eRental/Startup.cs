@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using server_eRental.Models;
+using server_eRental.Models.Momo;
+using server_eRental.Services.Momo;
 
 
 namespace server_eRental
@@ -32,12 +34,13 @@ namespace server_eRental
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+           
             services.AddDbContext<eRentalContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
-                    );
-
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.Configure<MomoOption>(Configuration.GetSection("MomoAPI"));
+            services.AddScoped<IMomoService, MomoService>();
             services.AddControllers();
+           
 
             // Cấu hình JWT
             var key = Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]);

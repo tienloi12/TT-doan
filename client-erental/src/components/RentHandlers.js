@@ -1,12 +1,22 @@
 import { Toast } from "antd-mobile";
+
 import dayjs from "dayjs";
 import { addNotification } from "../redux/actions/NotificationActions";
-import { clearCart } from "../redux/actions/RentalActions";
 
-export const handleRent = async ({ totalPrice,userId, products, startDate, endDate, navigate,quantity,quantityMap, dispatch }) => {
-  console.log("san phẩm", products);
+export const handleRent = async ({
+  totalPrice,
+  userId,
+  products,
+  startDate,
+  endDate,
+  navigate,
+  quantity,
+  quantityMap,
+  dispatch,
+}) => {
+  console.log("Sản phẩm:", products);
 
-  if(products.length === 0) {
+  if (products.length === 0) {
     Toast.show({ content: "Vui lòng chọn sản phẩm", duration: 2000 });
     return;
   }
@@ -21,19 +31,28 @@ export const handleRent = async ({ totalPrice,userId, products, startDate, endDa
 
   const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
   if (days <= 0) {
-    Toast.show({ content: "Ngày kết thúc phải sau ngày bắt đầu!", duration: 2000 });
+    Toast.show({
+      content: "Ngày kết thúc phải sau ngày bắt đầu!",
+      duration: 2000,
+    });
     return;
   }
+
+  // Lưu các sản phẩm vào localStorage
   const orderProducts = products.map((product) => ({
     productId: product.productId,
     quantity: quantityMap[product.productId] || 1,
   }));
+  
+  localStorage.setItem('cartProducts', JSON.stringify(orderProducts));
+  localStorage.setItem('rentalDates', JSON.stringify({ startDate, endDate }));
   const orderData = {
     createdAt: new Date().toISOString(),
     userId: userId,
     orderProducts,
   };
-console.log("Order data:", orderData);
+  console.log("Order data:", orderData);
+
   try {
     // 1. Tạo đơn hàng
     const orderRes = await fetch("https://localhost:5001/api/orders", {
@@ -46,6 +65,7 @@ console.log("Order data:", orderData);
 
     const createdOrder = await orderRes.json(); // giả sử trả về { orderId: 123 }
     console.log("Đơn hàng đã tạo:", createdOrder);
+
     // 2. Tạo rental gắn với orderId vừa tạo
     const rentalData = {
       orderId: createdOrder.orderId, // hoặc createdOrder.id tùy backend trả về
@@ -53,7 +73,7 @@ console.log("Order data:", orderData);
       startDate: startDate.toISOString(),
       endDate: endDate.toISOString(),
       totalPrice: totalPrice,
-      status: "Pending"
+      status: "Pending",
     };
 
     const rentalRes = await fetch("https://localhost:5001/api/rentals", {
@@ -63,8 +83,10 @@ console.log("Order data:", orderData);
     });
 
     if (!rentalRes.ok) throw new Error("Không thể tạo rental!");
+    const createdRental = await rentalRes.json();
     console.log("Rental đã tạo:", rentalData);
-    dispatch(clearCart());
+
+    // Thêm thông báo
     const newNotification = {
       action: "New",
       message: `Bạn đã thuê thành công`,
@@ -78,8 +100,19 @@ console.log("Order data:", orderData);
     console.log("Đã thêm thông báo:", newNotification);
 
     Toast.show({ content: "Thuê thành công!", duration: 2000 });
-    navigate("/dashboard");
 
+    // Chuyển hướng đến trang thanh toán với thông tin đơn hàng
+    navigate("/payment", {
+      state: {
+        totalPrice,
+        orderProducts,
+        startDate,
+        endDate,
+        quantityMap,
+        orderId: createdOrder.orderId,
+        rentalId: createdRental.rentalId,
+      },
+    });
   } catch (error) {
     console.error("Lỗi khi thuê sản phẩm:", error);
     Toast.show({ content: "Thuê thất bại!", duration: 2000 });

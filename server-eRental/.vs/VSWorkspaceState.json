@@ -3,8 +3,11 @@
     "",
     "\\Controllers",
     "\\Models",
-    "\\Properties"
+    "\\Models\\Momo",
+    "\\Properties",
+    "\\Services",
+    "\\Services\\Momo"
   ],
-  "SelectedNode": "\\Controllers\\PaymentsController.cs",
+  "SelectedNode": "\\Services\\Momo\\IMomoService.cs",
   "PreviewInSolutionExplorer": false
 }

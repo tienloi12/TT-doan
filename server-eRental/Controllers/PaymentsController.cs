@@ -18,7 +18,6 @@ namespace server_eRental.Controllers
         {
             _context = context;
         }
-
         [HttpPost]
         public async Task<IActionResult> CreatePayment([FromBody] Payment payment)
         {
@@ -27,10 +26,13 @@ namespace server_eRental.Controllers
 
             try
             {
-                // Optional: kiểm tra rentalId có tồn tại không
-                var rentalExists = await _context.Rentals.AnyAsync(r => r.RentalId == payment.RentalId);
-                if (!rentalExists)
-                    return NotFound("Không tìm thấy rental tương ứng.");
+                // ✅ Chỉ kiểm tra nếu RentalId có giá trị
+                if (payment.RentalId.HasValue && payment.RentalId.Value > 0)
+                {
+                    var rentalExists = await _context.Rentals.AnyAsync(r => r.RentalId == payment.RentalId);
+                    if (!rentalExists)
+                        return NotFound("Không tìm thấy rental tương ứng.");
+                }
 
                 payment.CreatedAt = DateTime.UtcNow;
 
@@ -43,8 +45,7 @@ namespace server_eRental.Controllers
             {
                 return StatusCode(500, $"Lỗi server khi tạo payment: {ex.Message}");
             }
-        }
-
+        }       
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdatePayment(int id, [FromBody] Payment updatedPaymentData)
         {
@@ -59,7 +60,7 @@ namespace server_eRental.Controllers
                 return NotFound("Payment not found.");
             }
 
-            payment.RentalId = updatedPaymentData.Status;
+            payment.RentalId = updatedPaymentData.RentalId;
 
             try
             {
@@ -77,7 +78,7 @@ namespace server_eRental.Controllers
                 }
             }
 
-            return NoContent(); // Trả về HTTP 204 nếu cập nhật thành công
+            return NoContent(); 
         }
 
         private bool PaymentExists(int id)
@@ -85,5 +86,4 @@ namespace server_eRental.Controllers
             return _context.Payments.Any(e => e.PaymentId == id);
         }
     }
-}
 }
