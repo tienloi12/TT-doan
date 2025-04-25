@@ -53,8 +53,9 @@ const RentPage = () => {
         setProducts(fetched);
 
         const initialQuantities = {};
-        rentItems.forEach((item) => {
-          initialQuantities[item.productId] = item.quantity || 1;
+        fetched.forEach((product) => {
+          initialQuantities[product.productId] = 1;
+          console.log("Product:", product.productId, "Available:", product.quantity);
         });
         setQuantityMap(initialQuantities);
       } catch (err) {
@@ -89,8 +90,7 @@ const RentPage = () => {
       setTotalPrice(total);
     }
   }, [products, startDate, endDate, quantityMap]);
-
-
+ 
   useEffect(() => {
     const updatedCart = rentItems.map((item) => ({
       ...item,
@@ -98,7 +98,8 @@ const RentPage = () => {
     }));
     localStorage.setItem("rentItems", JSON.stringify(updatedCart));
   }, [quantityMap]);
-  
+
+  console.log("quantityMap:", quantityMap);
   return (
     <div className="rent-container">
       <NavBar onBack={() => navigate("/product")}>Rental cart</NavBar>
@@ -141,12 +142,22 @@ const RentPage = () => {
                   <Button
                     shape="rounded"
                     size="mini"
-                    onClick={() =>
-                      setQuantityMap((prev) => ({
-                        ...prev,
-                        [product.productId]: (prev[product.productId] || 1) + 1,
-                      }))
-                    }
+                    onClick={() => {
+                      const current = quantityMap[product.productId] || 1;
+                      const maxAvailable = product.quantity || 1;
+
+                      if (current < maxAvailable) {
+                        setQuantityMap((prev) => ({
+                          ...prev,
+                          [product.productId]: current + 1,
+                        }));
+                      } else {
+                        Toast.show({
+                          content: `Chỉ còn ${maxAvailable} sản phẩm có sẵn.`,
+                          duration: 2000,
+                        });
+                      }
+                    }}
                   >
                     +
                   </Button>

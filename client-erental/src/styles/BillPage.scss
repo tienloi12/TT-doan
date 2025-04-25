@@ -17,3 +17,9 @@
     }
   }
   
+  @media print {
+    .print-button,
+    .back-button {
+      display: none;
+    }
+  }

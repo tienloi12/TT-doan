@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Card, Button, NavBar, Divider, Toast } from "antd-mobile";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,31 +16,62 @@ const PaymentPage = () => {
   const location = useLocation();
   const user = useSelector((state) => state.login.user);
 
-  const cartProducts = JSON.parse(localStorage.getItem("cartProducts")) || [];
-  const rentalDates = JSON.parse(localStorage.getItem("rentalDates")) || {
-    startDate: null,
-    endDate: null,
-  };
-  const quantityMap = cartProducts.reduce((map, item) => {
-    map[item.productId] = item.quantity;
+  // Sử dụng useMemo để giữ cartProducts cố định
+  const cartProducts = useMemo(() => {
+    return JSON.parse(localStorage.getItem("cartProducts")) || [];
+  }, []);
+
+  const rentalDates = useMemo(() => {
+    return JSON.parse(localStorage.getItem("rentalDates")) || {
+      startDate: null,
+      endDate: null,
+    };
+  }, []);
+  const quantityMap = useMemo(() => {
+    const map = {};
+    cartProducts.forEach((item) => {
+      map[item.productId] = item.quantity;
+    });
     return map;
-  }, {});
+  }, [cartProducts]);
+
   const {
     rentalId,
     orderId,
-    totalPrice,
-    products = cartProducts,
+    totalPrice = parseFloat(localStorage.getItem("totalPrice")) || 0,
     startDate = rentalDates.startDate,
     endDate = rentalDates.endDate,
   } = location.state || {};
+
+  const [fetchedProducts, setFetchedProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const fetched = await Promise.all(
+          cartProducts.map((item) =>
+            fetch(`http://localhost:5000/api/products/${item.productId}`).then((res) =>
+              res.json()
+            )
+          )
+        );
+        setFetchedProducts(fetched);
+      } catch (err) {
+        console.error("Lỗi khi tải sản phẩm:", err);
+      }
+    };
+
+    fetchProducts();
+  }, [cartProducts]);
+
+  console.log("Fetched products:", fetchedProducts);
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const resultCode = params.get("resultCode");
-    const orderId = params.get("orderId");
+    const returnedOrderId = params.get("orderId");
 
-    // Nếu có kết quả trả về, xử lý sự kiện
-    if (resultCode && orderId) {
-      handleMoMoReturn(resultCode, orderId, navigate);
+    if (resultCode && returnedOrderId) {
+      handleMoMoReturn(resultCode, returnedOrderId, navigate);
     }
   }, [location]);
 
@@ -83,9 +114,10 @@ const PaymentPage = () => {
           {endDate ? new Date(endDate).toLocaleDateString() : "Chưa chọn"}
         </p>
       </div>
+
       <Divider>Danh sách sản phẩm</Divider>
-      {products && products.length > 0 ? (
-        products.map((item) => (
+      {fetchedProducts && fetchedProducts.length > 0 ? (
+        fetchedProducts.map((item) => (
           <Card key={item.productId} className="payment-card">
             <div className="product-summary">
               <span>Tên sản phẩm: {item.name}</span>
@@ -96,6 +128,7 @@ const PaymentPage = () => {
       ) : (
         <div className="empty-payment">Không có sản phẩm nào.</div>
       )}
+
       <Divider />
       <div className="total-section">
         <strong>Tổng thanh toán:</strong> ${totalPrice || 0}
@@ -117,10 +150,10 @@ const PaymentPage = () => {
             quantityMap,
             dispatch,
             totalPrice,
-            quantityMap,
             user,
             orderId,
             rentalId,
+            fetchedProducts,
           })
         }
       >

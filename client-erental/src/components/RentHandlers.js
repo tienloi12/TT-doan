@@ -46,6 +46,7 @@ export const handleRent = async ({
   
   localStorage.setItem('cartProducts', JSON.stringify(orderProducts));
   localStorage.setItem('rentalDates', JSON.stringify({ startDate, endDate }));
+  localStorage.setItem('totalPrice', totalPrice);
   const orderData = {
     createdAt: new Date().toISOString(),
     userId: userId,

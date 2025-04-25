@@ -10,9 +10,12 @@ const BillPage = () => {
     userName,
     paymentId,
     totalPrice,
+    quantityMap = {},
     products = [],
+    fetchedProducts = [],
   } = location.state || {};
 
+  console.log("BillPage location state:", location.state);
   if (!paymentId || !userName || products.length === 0) {
     Toast.show({ content: "Thiếu dữ liệu hóa đơn", duration: 2000 });
     return null;
@@ -34,15 +37,22 @@ const BillPage = () => {
 
       <Card title="Danh sách sản phẩm">
         <List>
-          {products.map((item, index) => (
-            <List.Item key={index}>
-              <div>
-                <div className="product-name">{item.name}</div>
-                <div>Số lượng: {item.quantity}</div>
-                <div>Giá: {item.price.toLocaleString()} đ</div>
-              </div>
-            </List.Item>
-          ))}
+          {fetchedProducts.map((item, index) => {
+            // Lấy quantity từ cartProducts dựa trên productId
+            const quantity = quantityMap[item.productId] || 1; // Hoặc bạn có thể lấy quantity từ cartProducts nếu bạn có thông tin đó
+            return (
+              <List.Item key={index}>
+                <div>
+                  <div className="product-name">{item.name}</div>
+                  <div>Số lượng: {quantity}</div>
+                  <div>
+                    Giá:{" "}
+                    {item.price ? item.price.toLocaleString() : "Chưa có giá"} đ
+                  </div>
+                </div>
+              </List.Item>
+            );
+          })}
         </List>
       </Card>
 

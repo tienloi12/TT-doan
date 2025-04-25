@@ -38,6 +38,7 @@ namespace eRental.Controllers
                     p.Category,
                     p.Price,
                     p.ImageUrl,
+                    p.Quantity,
                     p.CreatedAt
                 })
                 .FirstOrDefaultAsync();
