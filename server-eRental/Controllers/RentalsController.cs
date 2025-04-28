@@ -106,6 +106,45 @@ namespace server_eRental.Controllers
         return StatusCode(500, $"Lỗi server: {ex.Message}");
     }
 }
+[HttpGet]
+public async Task<IActionResult> GetAllRentals()
+{
+    try
+    {
+        var rentals = await _context.Rentals
+            .Include(r => r.Customer)
+            .ToListAsync();
+
+        var result = rentals.Select(rental => new Rental
+        {
+            RentalId = rental.RentalId,
+            CustomerId = rental.CustomerId,
+            OrderId = rental.OrderId,
+            StartDate = rental.StartDate,
+            EndDate = rental.EndDate,
+            TotalPrice = rental.TotalPrice,
+            Status = rental.Status,
+            CreatedAt = rental.CreatedAt,
+            Customer = new User
+            {
+                UserId = rental.Customer.UserId,
+                Username = rental.Customer.Username,
+                Email = rental.Customer.Email,
+                Phone = rental.Customer.Phone,
+                Role = rental.Customer.Role,
+                Room = rental.Customer.Room,
+                CreatedAt = rental.Customer.CreatedAt
+            }
+         
+        }).ToList();
+        return Ok (result);
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, $"Lỗi server: {ex.Message}");
+    }
+}
+
 
 
     }

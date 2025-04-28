@@ -39,7 +39,11 @@ namespace server_eRental
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.Configure<MomoOption>(Configuration.GetSection("MomoAPI"));
             services.AddScoped<IMomoService, MomoService>();
-            services.AddControllers();
+            services.AddControllers()
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+        });
            
 
             // Cấu hình JWT

@@ -19,7 +19,13 @@ const ProductList = () => {
         const response = await fetch("https://localhost:5001/api/products");
         if (!response.ok) throw new Error("Failed to load product list");
         const data = await response.json();
-        setProducts(data);
+  
+        // Kiểm tra xem có $values không và chỉ cần lấy danh sách sản phẩm
+        if (data && Array.isArray(data.$values)) {
+          setProducts(data.$values); // Chỉ lưu trữ mảng $values vào state
+        } else {
+          console.error("Dữ liệu trả về không hợp lệ:", data);
+        }
       } catch (error) {
         console.error(error);
       } finally {
@@ -28,6 +34,7 @@ const ProductList = () => {
     };
     fetchProducts();
   }, []);
+  
 
   // Filter products based on search input
   const filteredProducts = products.filter((product) =>

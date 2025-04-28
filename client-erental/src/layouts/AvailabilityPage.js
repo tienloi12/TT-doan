@@ -1,25 +1,31 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { NavBar, Button, Card, Space } from "antd-mobile";
 import { FilterOutline } from "antd-mobile-icons";
 import { useNavigate } from "react-router-dom";
-import { setOrders } from "../redux/actions/OrderActions";
 import TabBarComponent from "./Tarbar";
 import "../../src/styles/AvailabilityPage.scss";
-import { useDispatch, useSelector } from "react-redux";
 
 const RentalAvailability = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const orders = useSelector((state) => state.orders.orders);
+  const [availableProducts, setAvailableProducts] = useState([]); // Lưu trữ các sản phẩm có trạng thái available
+
   useEffect(() => {
-    fetch("https://localhost:5001/api/orders")
+    fetch("https://localhost:5001/api/products")
       .then((response) => response.json())
       .then((data) => {
-        dispatch(setOrders(data));
-        console.log(data);
+        if (Array.isArray(data.$values)) {
+          // Lọc các sản phẩm có trạng thái "available"
+          const filteredProducts = data.$values.filter(
+            (product) => product.statusCode === "available"
+          );
+          setAvailableProducts(filteredProducts); // Cập nhật state với sản phẩm có trạng thái "available"
+          console.log(filteredProducts);
+        } else {
+          console.error("Dữ liệu trả về không phải là mảng", data);
+        }
       })
-      .catch((err) => console.error("Lỗi khi tải đơn hàng:", err));
-  }, [dispatch]);
+      .catch((err) => console.error("Lỗi khi tải sản phẩm:", err));
+  }, []);
 
   const generateDates = (days) => {
     const dateList = [];
@@ -69,55 +75,42 @@ const RentalAvailability = () => {
       </div>
 
       <div style={{ flexGrow: 1, background: "#fff", padding: "10px" }}>
-        <h3>Danh sách sản phẩm đã thuê</h3>
-        {orders.length === 0 ? (
-          <p>Chưa có sản phẩm nào được thuê.</p>
+        <h3>Danh sách sản phẩm có sẵn</h3>
+        {availableProducts.length === 0 ? (
+          <p>Chưa có sản phẩm nào có sẵn.</p>
         ) : (
           <Space direction="vertical" block className="rental-list">
-            {orders
-              .filter((order) => order.status === "sẵn sàng")
-              .map((order) => (
-                <Card
-                  key={order.orderId}
-                  title={order.name}
-                  style={{
-                    borderRadius: "8px",
-                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                    marginBottom: "10px",
-                  }}
-                  onClick={() => navigate(`/order/${order.orderId}`)}
-                >
-                  <div className="rental-card">
-                    <img
-                      src={order.imageUrl}
-                      alt={order.name}
-                      className="rental-img"
-                    />
-                    <div className="rental-info">
-                      <p>
-                        <strong>Giá:</strong> ${order.price}
-                      </p>
-                      <p>
-                        <strong>Tình trạng:</strong> {order.status}
-                      </p>
-                      <p>
-                        Ngày thuê:{" "}
-                        {order.rentals?.[0]?.startDate
-                          ? new Date(
-                              order.rentals[0].startDate
-                            ).toLocaleDateString("vi-VN")
-                          : "N/A"}{" "}
-                        - Ngày trả:{" "}
-                        {order.rentals?.[0]?.endDate
-                          ? new Date(
-                              order.rentals[0].endDate
-                            ).toLocaleDateString("vi-VN")
-                          : "N/A"}
-                      </p>
-                    </div>
+            {availableProducts.map((product) => (
+              <Card
+                key={product.productId} // Dùng productId làm key cho Card
+                title={product.name}
+                style={{
+                  borderRadius: "8px",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                  marginBottom: "10px",
+                }}
+                onClick={() => navigate(`/product/${product.productId}`)} // Điều hướng tới trang chi tiết sản phẩm
+              >
+                <div className="rental-card">
+                  <img
+                    src={product.imageUrl}
+                    alt={product.name}
+                    className="rental-img"
+                  />
+                  <div className="rental-info">
+                    <p>
+                      <strong>Giá:</strong> ${product.price}
+                    </p>
+                    <p>
+                      <strong>Tình trạng:</strong> {product.statusCode}
+                    </p>
+                    <p>
+                      <strong>Mô tả:</strong> {product.description}
+                    </p>
                   </div>
-                </Card>
-              ))}
+                </div>
+              </Card>
+            ))}
           </Space>
         )}
       </div>

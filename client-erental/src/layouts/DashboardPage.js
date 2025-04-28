@@ -23,7 +23,6 @@ const Dashboard = () => {
   const rentalStatus = useSelector((state) => state.rentalStatus.rentalStatus);
   const dispatch = useDispatch();
   const [revenueData, setRevenueData] = useState([]);
-  const [loading, setLoading] = useState(true);
   const fixSpecialCharacters = (str) => {
     return str.replace("Ð", "Đ");
   };
@@ -50,34 +49,49 @@ const Dashboard = () => {
     fetch("https://localhost:5001/api/products/status-summary")
       .then((res) => res.json())
       .then((data) => {
-        const statusWithColors = data.map((item) => {
-          console.log("Tên trạng thái:", item.name);
-          return {
-            ...item,
-            color: getColorForStatus(item.name),
-          };
-        });
-        console.log("Trạng thái có màu:", statusWithColors);
-        dispatch(setRentalStatus(statusWithColors));
+        // Kiểm tra dữ liệu trả về
+        console.log("Dữ liệu trả về từ API:", data);
+  
+        // Kiểm tra cấu trúc mảng $values
+        if (data && Array.isArray(data.$values)) {
+          const statusWithColors = data.$values.map((item) => {
+            console.log("Trạng thái:", item.name);
+            return {
+              ...item,
+              color: getColorForStatus(item.name),
+            };
+          });
+          console.log("Trạng thái có màu:", statusWithColors);
+          dispatch(setRentalStatus(statusWithColors));
+        } else {
+          console.error("Dữ liệu trạng thái không hợp lệ:", data);
+        }
       })
       .catch((err) => console.error("Lỗi load trạng thái:", err));
   }, []);
+  
 
   useEffect(() => {
     fetch("https://localhost:5001/api/rentals/monthly-revenue?year=2025")
       .then((res) => res.json())
       .then((data) => {
-        const monthNames = [
-          "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-        ];
+        if (data && Array.isArray(data.$values)) {
+          console.log("Dữ liệu doanh thu nhận được:", data.$values);
   
-        const revenueData = data.map((item) => ({
-          month: monthNames[item.month - 1],
-          value: item.totalRevenue
-        }));
+          const monthNames = [
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+          ];
   
-        setRevenueData(revenueData); // Dùng cho biểu đồ
+          const revenueData = data.$values.map((item) => ({
+            month: monthNames[item.month - 1],
+            value: item.totalRevenue
+          }));
+  
+          setRevenueData(revenueData); // Dùng cho biểu đồ
+        } else {
+          console.error("Dữ liệu doanh thu không hợp lệ:", data);
+        }
       })
       .catch((err) => console.error("Lỗi load doanh thu theo tháng:", err));
   }, []);
@@ -136,8 +150,8 @@ const Dashboard = () => {
         </div>
       </div>
       {/* Revenue Chart */}
-      <div className="chart-container">
-        <h3>
+      <div className="chart-container" width="100%" aspect={2}>
+        <h3 className="chart-title">
           Total Revenue <span className="increase">+31.9%</span>
         </h3>
         <div className="chart-wrapper">
