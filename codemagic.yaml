@@ -1,5 +1,12 @@
 workflows:
-  example-workflow:
-    name: Example Workflow
+  build-react-app:
+    name: Build React App
+    environment:
+      node: v22.14.0   
     scripts:
-      - echo "Hello Codemagic"
+      - name: Install dependencies
+        script: npm install
+      - name: Build the project
+        script: npm run build
+    artifacts:
+      - build/**
