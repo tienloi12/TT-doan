@@ -1,0 +1,5 @@
+workflows:
+  example-workflow:
+    name: Example Workflow
+    scripts:
+      - echo "Hello Codemagic"
